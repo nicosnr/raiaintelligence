@@ -1,15 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Landmark, MessagesSquare, Search, ShieldCheck } from "lucide-react";
 import { topics } from "@/lib/civic-content";
+import { FlagStripe } from "@/components/FlagStripe";
+import jamhuriBg from "@/assets/jamhuri-bg.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CivicIntel — Neutral civic knowledge" },
+      { title: "CivicIntel — Civic knowledge for every Kenyan" },
       {
         name: "description",
         content:
-          "Learn how government works, what your rights are, and the meaning of civic terms — in plain, non-partisan language.",
+          "Understand the Constitution, your rights, and how government works — in plain, non-partisan language. Jamhuri ya Kenya.",
       },
     ],
   }),
@@ -17,25 +19,39 @@ export const Route = createFileRoute("/")({
 });
 
 const quickLinks = [
-  { to: "/learn", label: "Learn", desc: "How government works", Icon: BookOpen },
-  { to: "/representatives", label: "Representatives", desc: "Find who represents you", Icon: Landmark },
-  { to: "/glossary", label: "Glossary", desc: "Plain-language definitions", Icon: Search },
+  { to: "/learn", label: "Learn", desc: "Constitution & government", Icon: BookOpen },
+  { to: "/representatives", label: "Leaders", desc: "Official directories", Icon: Landmark },
+  { to: "/glossary", label: "Glossary", desc: "Plain-language terms", Icon: Search },
   { to: "/assistant", label: "Ask", desc: "Educational AI explainer", Icon: MessagesSquare },
 ] as const;
 
 function Index() {
   return (
     <div className="flex flex-col">
-      <header className="bg-primary px-6 pt-10 pb-8 text-primary-foreground">
-        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-primary-foreground/70">
+      <FlagStripe />
+      <header
+        className="relative overflow-hidden px-6 pt-10 pb-10 text-primary-foreground"
+        style={{
+          backgroundImage: `linear-gradient(180deg, oklch(0.18 0.03 260 / 0.78) 0%, oklch(0.18 0.03 260 / 0.92) 100%), url(${jamhuriBg.url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-primary-foreground/75">
           <ShieldCheck className="size-4" aria-hidden="true" />
           Non-partisan · Educational
         </div>
         <h1 className="mt-3 text-3xl font-semibold leading-tight">CivicIntel</h1>
-        <p className="mt-2 text-sm text-primary-foreground/80">
-          A neutral utility for understanding government, rights, and civic life.
+        <p className="mt-2 max-w-[28ch] text-sm text-primary-foreground/85">
+          Understand the Constitution, your rights, and how government works —
+          in plain language.
+        </p>
+        <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/5 px-3 py-1 font-serif text-[11px] tracking-[0.2em] text-primary-foreground/80">
+          JAMHURI YA KENYA
         </p>
       </header>
+      <FlagStripe />
+
 
       <section className="px-5 pt-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
