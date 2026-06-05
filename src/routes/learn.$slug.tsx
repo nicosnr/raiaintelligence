@@ -48,7 +48,7 @@ function TopicPage() {
         <p className="mt-2 text-sm text-primary-foreground/80">{topic.summary}</p>
       </header>
       <div className="px-5 py-6 space-y-5">
-        {topic.sections.map((s) => (
+        {topic.sections.map((s: { heading: string; body: string }) => (
           <section key={s.heading}>
             <h2 className="font-serif text-lg font-semibold">{s.heading}</h2>
             <p className="mt-1.5 text-[15px] leading-relaxed text-foreground/90">{s.body}</p>
