@@ -148,7 +148,7 @@ function AssistantPage() {
             type="submit"
             disabled={loading || !input.trim()}
             aria-label="Send"
-            className="inline-flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground disabled:opacity-40"
+            className="inline-flex size-11 items-center justify-center rounded-full bg-accent text-accent-foreground disabled:opacity-40"
           >
             <Send className="size-4" aria-hidden="true" />
           </button>

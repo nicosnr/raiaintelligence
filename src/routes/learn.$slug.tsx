@@ -36,28 +36,36 @@ export const Route = createFileRoute("/learn/$slug")({
 function TopicPage() {
   const { topic } = Route.useLoaderData();
   return (
-    <article>
-      <header className="bg-primary px-5 pt-8 pb-7 text-primary-foreground">
+    <article className="bg-background pb-28">
+      <header className="px-5 pt-6 pb-4">
         <Link
           to="/learn"
-          className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-primary-foreground/70"
+          className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-muted-foreground not-italic"
         >
           <ArrowLeft className="size-3.5" aria-hidden="true" /> Back
         </Link>
-        <h1 className="mt-3 text-2xl font-semibold leading-tight">{topic.title}</h1>
-        <p className="mt-2 text-sm text-primary-foreground/80">{topic.summary}</p>
+        <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent not-italic">
+          Explainer
+        </p>
+        <h1 className="mt-1.5 font-serif text-[34px] leading-[1] tracking-tight">
+          {topic.title}
+        </h1>
+        <p className="mt-3 text-sm not-italic text-muted-foreground">{topic.summary}</p>
       </header>
-      <div className="px-5 py-6 space-y-5">
+      <div className="space-y-5 px-5 pt-2">
         {topic.sections.map((s: { heading: string; body: string }) => (
-          <section key={s.heading}>
-            <h2 className="font-serif text-lg font-semibold">{s.heading}</h2>
-            <p className="mt-1.5 text-[15px] leading-relaxed text-foreground/90">{s.body}</p>
+          <section key={s.heading} className="rounded-2xl border border-border bg-card p-4">
+            <h2 className="font-serif text-xl leading-tight">{s.heading}</h2>
+            <p className="mt-2 text-[15px] leading-relaxed not-italic text-foreground/85">
+              {s.body}
+            </p>
           </section>
         ))}
-        <p className="rounded-md border border-border bg-secondary p-3 text-xs text-secondary-foreground/80">
+        <p className="rounded-2xl border border-border bg-secondary p-3 text-xs not-italic text-muted-foreground">
           Educational content only. Not legal advice.
         </p>
       </div>
     </article>
   );
 }
+

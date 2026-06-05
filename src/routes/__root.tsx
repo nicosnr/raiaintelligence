@@ -97,8 +97,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap",
       },
+
     ],
   }),
   shellComponent: RootShell,
@@ -133,20 +134,29 @@ function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="sticky bottom-0 left-0 right-0 border-t border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80"
+      className="pointer-events-none sticky bottom-3 left-0 right-0 z-20 mt-3 flex justify-center px-4"
     >
-      <ul className="grid grid-cols-5">
+      <ul
+        className="pointer-events-auto flex items-center gap-1 rounded-full border border-border bg-background/95 px-2 py-1.5 backdrop-blur"
+        style={{ boxShadow: "var(--shadow-float)" }}
+      >
         {navItems.map(({ to, label, icon: Icon }) => (
           <li key={to}>
             <Link
               to={to}
-              activeProps={{ className: "text-primary" }}
-              inactiveProps={{ className: "text-muted-foreground" }}
               activeOptions={{ exact: to === "/" }}
-              className="flex min-h-14 flex-col items-center justify-center gap-1 px-1 py-2 text-[11px] font-medium"
+              activeProps={{
+                className:
+                  "bg-accent text-accent-foreground gap-1.5 px-3.5",
+              }}
+              inactiveProps={{ className: "text-muted-foreground gap-0 px-2.5" }}
+              className="group flex h-10 items-center justify-center rounded-full text-[12px] font-medium transition-all"
+              aria-label={label}
             >
-              <Icon className="size-5" aria-hidden="true" />
-              <span>{label}</span>
+              <Icon className="size-[18px]" aria-hidden="true" />
+              <span className="hidden whitespace-nowrap group-aria-[current=page]:inline">
+                {label}
+              </span>
             </Link>
           </li>
         ))}
@@ -154,6 +164,7 @@ function BottomNav() {
     </nav>
   );
 }
+
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
