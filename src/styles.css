@@ -115,7 +115,7 @@
 
   html,
   body {
-    background-color: var(--color-muted);
+    background-color: oklch(0.94 0.005 260);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -123,7 +123,9 @@
 
   h1, h2, h3 {
     font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    font-style: italic;
+    font-weight: 600;
   }
 }
 
@@ -137,3 +139,22 @@
   position: relative;
   box-shadow: var(--shadow-card);
 }
+
+@utility pill-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--color-secondary);
+  color: var(--color-secondary-foreground);
+}
+
+@utility pill-tab-active {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
