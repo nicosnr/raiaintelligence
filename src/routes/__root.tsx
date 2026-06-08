@@ -171,12 +171,13 @@ function BottomNav() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="app-frame flex flex-col">
         <ThemeToggle />
-        <main className="flex-1 pb-2">
+        <main key={pathname} className="flex-1 animate-fade-up pb-2">
           <Outlet />
         </main>
         <BottomNav />
