@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RepresentativesRouteImport } from './routes/representatives'
+import { Route as ReelsRouteImport } from './routes/reels'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as AssistantRouteImport } from './routes/assistant'
@@ -19,6 +20,11 @@ import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
 const RepresentativesRoute = RepresentativesRouteImport.update({
   id: '/representatives',
   path: '/representatives',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReelsRoute = ReelsRouteImport.update({
+  id: '/reels',
+  path: '/reels',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/glossary'
     | '/learn'
+    | '/reels'
     | '/representatives'
     | '/learn/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/glossary'
     | '/learn'
+    | '/reels'
     | '/representatives'
     | '/learn/$slug'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/glossary'
     | '/learn'
+    | '/reels'
     | '/representatives'
     | '/learn/$slug'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   GlossaryRoute: typeof GlossaryRoute
   LearnRoute: typeof LearnRouteWithChildren
+  ReelsRoute: typeof ReelsRoute
   RepresentativesRoute: typeof RepresentativesRoute
 }
 
@@ -114,6 +127,13 @@ declare module '@tanstack/react-router' {
       path: '/representatives'
       fullPath: '/representatives'
       preLoaderRoute: typeof RepresentativesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reels': {
+      id: '/reels'
+      path: '/reels'
+      fullPath: '/reels'
+      preLoaderRoute: typeof ReelsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -169,8 +189,19 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   GlossaryRoute: GlossaryRoute,
   LearnRoute: LearnRouteWithChildren,
+  ReelsRoute: ReelsRoute,
   RepresentativesRoute: RepresentativesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
