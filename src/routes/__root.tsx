@@ -174,6 +174,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="app-frame flex flex-col">
+        <ThemeToggle />
         <main className="flex-1 pb-2">
           <Outlet />
         </main>
