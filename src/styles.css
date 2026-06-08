@@ -160,9 +160,9 @@
   background: var(--color-secondary);
   color: var(--color-secondary-foreground);
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.25s ease, color 0.25s ease;
+  &:hover { transform: translateY(-1px); }
+  &:active { transform: translateY(0) scale(0.97); }
 }
-@utility pill-tab:hover { transform: translateY(-1px); }
-@utility pill-tab:active { transform: translateY(0) scale(0.97); }
 
 @utility pill-tab-active {
   background: var(--gradient-ke);
@@ -181,8 +181,8 @@
 
 @utility tap {
   transition: transform 0.15s ease, opacity 0.15s ease;
+  &:active { transform: scale(0.93); opacity: 0.85; }
 }
-@utility tap:active { transform: scale(0.93); opacity: 0.85; }
 
 @keyframes ke-fade-up {
   from { opacity: 0; transform: translateY(8px); }
