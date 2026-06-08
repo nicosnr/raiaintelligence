@@ -181,8 +181,8 @@
 
 @utility tap {
   transition: transform 0.15s ease, opacity 0.15s ease;
+  &:active { transform: scale(0.93); opacity: 0.85; }
 }
-@utility tap:active { transform: scale(0.93); opacity: 0.85; }
 
 @keyframes ke-fade-up {
   from { opacity: 0; transform: translateY(8px); }
