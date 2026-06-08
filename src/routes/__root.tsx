@@ -125,6 +125,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
+  { to: "/posts", label: "Posts", icon: LayoutGrid },
+  { to: "/reels", label: "Reels", icon: Play },
   { to: "/learn", label: "Learn", icon: BookOpen },
   { to: "/representatives", label: "Reps", icon: Landmark },
   { to: "/glossary", label: "Glossary", icon: Search },
