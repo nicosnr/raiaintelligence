@@ -160,9 +160,9 @@
   background: var(--color-secondary);
   color: var(--color-secondary-foreground);
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.25s ease, color 0.25s ease;
+  &:hover { transform: translateY(-1px); }
+  &:active { transform: translateY(0) scale(0.97); }
 }
-@utility pill-tab:hover { transform: translateY(-1px); }
-@utility pill-tab:active { transform: translateY(0) scale(0.97); }
 
 @utility pill-tab-active {
   background: var(--gradient-ke);
