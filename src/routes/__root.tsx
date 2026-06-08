@@ -137,26 +137,25 @@ function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="pointer-events-none sticky bottom-3 left-0 right-0 z-20 mt-3 flex justify-center px-4"
+      className="pointer-events-none sticky bottom-3 left-0 right-0 z-20 mt-3 flex justify-center px-3"
     >
       <ul
-        className="pointer-events-auto flex items-center gap-1 rounded-full border border-border bg-background/95 px-2 py-1.5 backdrop-blur"
+        className="pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-border bg-background/90 px-1.5 py-1.5 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         style={{ boxShadow: "var(--shadow-float)" }}
       >
         {navItems.map(({ to, label, icon: Icon }) => (
-          <li key={to}>
+          <li key={to} className="shrink-0">
             <Link
               to={to}
               activeOptions={{ exact: to === "/" }}
               activeProps={{
-                className:
-                  "bg-accent text-accent-foreground gap-1.5 px-3.5",
+                className: "ke-gradient text-white gap-1.5 px-3",
               }}
-              inactiveProps={{ className: "text-muted-foreground gap-0 px-2.5" }}
-              className="group flex h-10 items-center justify-center rounded-full text-[12px] font-medium transition-all"
+              inactiveProps={{ className: "text-muted-foreground gap-0 px-2.5 hover:text-foreground" }}
+              className="group flex h-9 items-center justify-center rounded-full text-[11px] font-medium transition-all"
               aria-label={label}
             >
-              <Icon className="size-[18px]" aria-hidden="true" />
+              <Icon className="size-[16px]" aria-hidden="true" />
               <span className="hidden whitespace-nowrap group-aria-[current=page]:inline">
                 {label}
               </span>
