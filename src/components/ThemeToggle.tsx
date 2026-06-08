@@ -24,7 +24,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label="Toggle dark mode"
-      className="tap fixed right-3 top-3 z-30 flex size-10 items-center justify-center rounded-full border border-border bg-background/80 backdrop-blur"
+      className="tap absolute right-3 top-3 z-30 flex size-10 items-center justify-center rounded-full border border-border bg-background/80 backdrop-blur"
       style={{ boxShadow: "var(--shadow-float)" }}
     >
       {dark ? <Sun className="size-[18px] text-accent" /> : <Moon className="size-[18px] text-foreground" />}
