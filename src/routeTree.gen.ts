@@ -9,15 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RepresentativesRouteImport } from './routes/representatives'
 import { Route as ReelsRouteImport } from './routes/reels'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostsRouteImport } from './routes/posts'
+import { Route as PollsRouteImport } from './routes/polls'
+import { Route as NewsRouteImport } from './routes/news'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as GlossaryRouteImport } from './routes/glossary'
+import { Route as EconomyRouteImport } from './routes/economy'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
+import { Route as AgentsSentinelRouteImport } from './routes/agents.sentinel'
+import { Route as AgentsJusticeRouteImport } from './routes/agents.justice'
+import { Route as AgentsCivicgovRouteImport } from './routes/agents.civicgov'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RepresentativesRoute = RepresentativesRouteImport.update({
   id: '/representatives',
   path: '/representatives',
@@ -28,9 +49,24 @@ const ReelsRoute = ReelsRouteImport.update({
   path: '/reels',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostsRoute = PostsRouteImport.update({
   id: '/posts',
   path: '/posts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PollsRoute = PollsRouteImport.update({
+  id: '/polls',
+  path: '/polls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -41,6 +77,21 @@ const LearnRoute = LearnRouteImport.update({
 const GlossaryRoute = GlossaryRouteImport.update({
   id: '/glossary',
   path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EconomyRoute = EconomyRouteImport.update({
+  id: '/economy',
+  path: '/economy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssistantRoute = AssistantRouteImport.update({
@@ -58,36 +109,84 @@ const LearnSlugRoute = LearnSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => LearnRoute,
 } as any)
+const AgentsSentinelRoute = AgentsSentinelRouteImport.update({
+  id: '/agents/sentinel',
+  path: '/agents/sentinel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentsJusticeRoute = AgentsJusticeRouteImport.update({
+  id: '/agents/justice',
+  path: '/agents/justice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentsCivicgovRoute = AgentsCivicgovRouteImport.update({
+  id: '/agents/civicgov',
+  path: '/agents/civicgov',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/news': typeof NewsRoute
+  '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/agents/civicgov': typeof AgentsCivicgovRoute
+  '/agents/justice': typeof AgentsJusticeRoute
+  '/agents/sentinel': typeof AgentsSentinelRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/news': typeof NewsRoute
+  '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/agents/civicgov': typeof AgentsCivicgovRoute
+  '/agents/justice': typeof AgentsJusticeRoute
+  '/agents/sentinel': typeof AgentsSentinelRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assistant': typeof AssistantRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
+  '/news': typeof NewsRoute
+  '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/agents/civicgov': typeof AgentsCivicgovRoute
+  '/agents/justice': typeof AgentsJusticeRoute
+  '/agents/sentinel': typeof AgentsSentinelRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRouteTypes {
@@ -95,46 +194,104 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistant'
+    | '/auth'
+    | '/calendar'
+    | '/economy'
     | '/glossary'
     | '/learn'
+    | '/news'
+    | '/polls'
     | '/posts'
+    | '/profile'
     | '/reels'
     | '/representatives'
+    | '/services'
+    | '/settings'
+    | '/agents/civicgov'
+    | '/agents/justice'
+    | '/agents/sentinel'
     | '/learn/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/assistant'
+    | '/auth'
+    | '/calendar'
+    | '/economy'
     | '/glossary'
     | '/learn'
+    | '/news'
+    | '/polls'
     | '/posts'
+    | '/profile'
     | '/reels'
     | '/representatives'
+    | '/services'
+    | '/settings'
+    | '/agents/civicgov'
+    | '/agents/justice'
+    | '/agents/sentinel'
     | '/learn/$slug'
   id:
     | '__root__'
     | '/'
     | '/assistant'
+    | '/auth'
+    | '/calendar'
+    | '/economy'
     | '/glossary'
     | '/learn'
+    | '/news'
+    | '/polls'
     | '/posts'
+    | '/profile'
     | '/reels'
     | '/representatives'
+    | '/services'
+    | '/settings'
+    | '/agents/civicgov'
+    | '/agents/justice'
+    | '/agents/sentinel'
     | '/learn/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistantRoute: typeof AssistantRoute
+  AuthRoute: typeof AuthRoute
+  CalendarRoute: typeof CalendarRoute
+  EconomyRoute: typeof EconomyRoute
   GlossaryRoute: typeof GlossaryRoute
   LearnRoute: typeof LearnRouteWithChildren
+  NewsRoute: typeof NewsRoute
+  PollsRoute: typeof PollsRoute
   PostsRoute: typeof PostsRoute
+  ProfileRoute: typeof ProfileRoute
   ReelsRoute: typeof ReelsRoute
   RepresentativesRoute: typeof RepresentativesRoute
+  ServicesRoute: typeof ServicesRoute
+  SettingsRoute: typeof SettingsRoute
+  AgentsCivicgovRoute: typeof AgentsCivicgovRoute
+  AgentsJusticeRoute: typeof AgentsJusticeRoute
+  AgentsSentinelRoute: typeof AgentsSentinelRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/representatives': {
       id: '/representatives'
       path: '/representatives'
@@ -149,11 +306,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReelsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/posts': {
       id: '/posts'
       path: '/posts'
       fullPath: '/posts'
       preLoaderRoute: typeof PostsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/polls': {
+      id: '/polls'
+      path: '/polls'
+      fullPath: '/polls'
+      preLoaderRoute: typeof PollsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -168,6 +346,27 @@ declare module '@tanstack/react-router' {
       path: '/glossary'
       fullPath: '/glossary'
       preLoaderRoute: typeof GlossaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/economy': {
+      id: '/economy'
+      path: '/economy'
+      fullPath: '/economy'
+      preLoaderRoute: typeof EconomyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/assistant': {
@@ -191,6 +390,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnSlugRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/agents/sentinel': {
+      id: '/agents/sentinel'
+      path: '/agents/sentinel'
+      fullPath: '/agents/sentinel'
+      preLoaderRoute: typeof AgentsSentinelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agents/justice': {
+      id: '/agents/justice'
+      path: '/agents/justice'
+      fullPath: '/agents/justice'
+      preLoaderRoute: typeof AgentsJusticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agents/civicgov': {
+      id: '/agents/civicgov'
+      path: '/agents/civicgov'
+      fullPath: '/agents/civicgov'
+      preLoaderRoute: typeof AgentsCivicgovRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -207,12 +427,33 @@ const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistantRoute: AssistantRoute,
+  AuthRoute: AuthRoute,
+  CalendarRoute: CalendarRoute,
+  EconomyRoute: EconomyRoute,
   GlossaryRoute: GlossaryRoute,
   LearnRoute: LearnRouteWithChildren,
+  NewsRoute: NewsRoute,
+  PollsRoute: PollsRoute,
   PostsRoute: PostsRoute,
+  ProfileRoute: ProfileRoute,
   ReelsRoute: ReelsRoute,
   RepresentativesRoute: RepresentativesRoute,
+  ServicesRoute: ServicesRoute,
+  SettingsRoute: SettingsRoute,
+  AgentsCivicgovRoute: AgentsCivicgovRoute,
+  AgentsJusticeRoute: AgentsJusticeRoute,
+  AgentsSentinelRoute: AgentsSentinelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
