@@ -16,6 +16,7 @@ import { Route as ReelsRouteImport } from './routes/reels'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PostsRouteImport } from './routes/posts'
 import { Route as PollsRouteImport } from './routes/polls'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as GlossaryRouteImport } from './routes/glossary'
@@ -62,6 +63,11 @@ const PostsRoute = PostsRouteImport.update({
 const PollsRoute = PollsRouteImport.update({
   id: '/polls',
   path: '/polls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
+  '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
   '/profile': typeof ProfileRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
+  '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
   '/profile': typeof ProfileRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
+  '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
   '/profile': typeof ProfileRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/learn'
     | '/news'
+    | '/onboarding'
     | '/polls'
     | '/posts'
     | '/profile'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/learn'
     | '/news'
+    | '/onboarding'
     | '/polls'
     | '/posts'
     | '/profile'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/glossary'
     | '/learn'
     | '/news'
+    | '/onboarding'
     | '/polls'
     | '/posts'
     | '/profile'
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   GlossaryRoute: typeof GlossaryRoute
   LearnRoute: typeof LearnRouteWithChildren
   NewsRoute: typeof NewsRoute
+  OnboardingRoute: typeof OnboardingRoute
   PollsRoute: typeof PollsRoute
   PostsRoute: typeof PostsRoute
   ProfileRoute: typeof ProfileRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/polls'
       fullPath: '/polls'
       preLoaderRoute: typeof PollsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   GlossaryRoute: GlossaryRoute,
   LearnRoute: LearnRouteWithChildren,
   NewsRoute: NewsRoute,
+  OnboardingRoute: OnboardingRoute,
   PollsRoute: PollsRoute,
   PostsRoute: PostsRoute,
   ProfileRoute: ProfileRoute,
@@ -447,13 +468,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

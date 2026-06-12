@@ -247,22 +247,34 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const router = useRouter();
   const [moreOpen, setMoreOpen] = useState(false);
 
+  useEffect(() => { setMoreOpen(false); }, [pathname]);
+
   useEffect(() => {
-    setMoreOpen(false);
-  }, [pathname]);
+    if (typeof window === "undefined") return;
+    try {
+      const seen = localStorage.getItem("ci-onboarded");
+      if (!seen && pathname !== "/onboarding" && pathname !== "/auth") {
+        router.navigate({ to: "/onboarding" });
+      }
+    } catch {}
+  }, [pathname, router]);
+
+  const isImmersive = pathname === "/onboarding" || pathname === "/reels";
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="app-frame flex flex-col">
-        <ThemeToggle />
+        {!isImmersive && <ThemeToggle />}
         <main key={pathname} className="flex-1 animate-fade-up pb-2">
           <Outlet />
         </main>
-        <BottomNav onOpenMore={() => setMoreOpen(true)} />
+        {pathname !== "/onboarding" && <BottomNav onOpenMore={() => setMoreOpen(true)} />}
         <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
       </div>
     </QueryClientProvider>
   );
 }
+
