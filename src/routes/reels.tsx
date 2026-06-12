@@ -1,13 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Heart, MessageCircle, Share2, Bookmark, Volume2, VolumeX, Play } from "lucide-react";
+import {
+  Heart, MessageCircle, Bookmark, Volume2, VolumeX, Play,
+  Search, Plus, Bell, ChevronDown, MoreHorizontal, Music2, BadgeCheck,
+} from "lucide-react";
 import { REELS, type Reel, type Category, timeAgo, formatCount } from "@/lib/feed-content";
+import { StoriesRail } from "@/components/StoriesRail";
 
 export const Route = createFileRoute("/reels")({
   head: () => ({
     meta: [
-      { title: "Watch — CivicIntel Reels" },
-      { name: "description", content: "Short civic education videos for Kenyans — bite-size, neutral, non-partisan." },
+      { title: "Reels — CivicIntel" },
+      { name: "description", content: "Short civic education videos for Kenyans — neutral, non-partisan, with government & officials stories." },
     ],
   }),
   component: ReelsPage,
@@ -17,31 +21,62 @@ const CATEGORIES: Array<Category | "All"> = ["All", "Rights", "Government", "Ele
 
 function ReelsPage() {
   const [filter, setFilter] = useState<(typeof CATEGORIES)[number]>("All");
+  const [tab, setTab] = useState<"Reels" | "Stories">("Reels");
   const scrollerRef = useRef<HTMLDivElement>(null);
   const list = useMemo(() => (filter === "All" ? REELS : REELS.filter((r) => r.category === filter)), [filter]);
 
   return (
     <div className="relative h-[100dvh] w-full overflow-hidden bg-black">
-      {/* Filter pills */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 px-3 pt-14">
-        <div className="pointer-events-auto overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex gap-1.5">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setFilter(c)}
-                className={
-                  "tap shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold backdrop-blur " +
-                  (filter === c ? "ke-gradient text-white" : "bg-white/15 text-white")
-                }
-              >
-                {c}
-              </button>
-            ))}
+      {/* Top bar — Instagram-style */}
+      <header className="pointer-events-none absolute inset-x-0 top-0 z-30">
+        <div className="pointer-events-auto flex items-center justify-between px-4 pt-4">
+          <button type="button" aria-label="Search" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+            <Search className="size-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab((t) => (t === "Reels" ? "Stories" : "Reels"))}
+            className="tap flex items-center gap-1 rounded-full px-3 py-1.5 text-white"
+          >
+            <span className="font-serif text-lg leading-none">{tab}</span>
+            <ChevronDown className="size-4" />
+          </button>
+          <div className="flex items-center gap-2">
+            <button type="button" aria-label="New" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+              <Plus className="size-4" />
+            </button>
+            <button type="button" aria-label="Notifications" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+              <Bell className="size-4" />
+            </button>
           </div>
         </div>
-      </div>
+
+        {/* Stories rail */}
+        <div className="pointer-events-auto bg-gradient-to-b from-black/65 to-transparent">
+          <StoriesRail />
+        </div>
+
+        {/* Filter pills */}
+        <div className="pointer-events-auto px-3 pb-3">
+          <div className="overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex gap-1.5">
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setFilter(c)}
+                  className={
+                    "tap shrink-0 rounded-full px-3 py-1.5 text-[11px] font-semibold backdrop-blur " +
+                    (filter === c ? "ke-gradient text-white" : "bg-white/15 text-white")
+                  }
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </header>
 
       <div
         ref={scrollerRef}
@@ -79,9 +114,8 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
       style={{ background: reel.poster, animationDelay: `${index * 60}ms` }}
       aria-label={reel.title}
     >
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/75" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/85" />
 
-      {/* Play/pause tap target */}
       <button
         type="button"
         onClick={() => setPlaying((p) => !p)}
@@ -102,87 +136,86 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
         type="button"
         onClick={() => setMuted((m) => !m)}
         aria-label={muted ? "Unmute" : "Mute"}
-        className="tap absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur"
+        className="tap absolute right-3 top-[210px] z-10 flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur"
       >
         {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
       </button>
 
-      {/* Right actions */}
-      <div className="absolute bottom-28 right-3 z-10 flex flex-col items-center gap-5 text-white">
-        <ActionButton
-          icon={<Heart className={"size-6 " + (liked ? "fill-current" : "")} />}
-          label={formatCount(likes)}
-          active={liked}
-          onClick={toggleLike}
-        />
-        <ActionButton icon={<MessageCircle className="size-6" />} label={formatCount(reel.comments)} />
-        <ActionButton icon={<Share2 className="size-6" />} label="Share" />
-        <ActionButton
-          icon={<Bookmark className={"size-6 " + (saved ? "fill-current" : "")} />}
-          label="Save"
-          active={saved}
-          onClick={() => setSaved((v) => !v)}
-        />
-      </div>
+      {/* Bottom block — caption + author + music + actions */}
+      <div className="relative z-10 mx-auto w-full max-w-[480px] px-4 pb-24 text-white">
+        {/* Caption */}
+        <span className="inline-block rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
+          {reel.category}
+        </span>
+        <h2 className="mt-2 font-serif text-2xl italic leading-tight">{reel.title}</h2>
+        <p className="mt-1 text-[13px] leading-snug text-white/90">{reel.caption}</p>
 
-      {/* Bottom overlay */}
-      <div className="relative z-10 mx-auto mb-24 w-full max-w-[420px] px-4 text-white">
-        <div className="flex items-center gap-3">
-          <div
-            className="ke-ring flex size-10 items-center justify-center rounded-full text-xs font-bold"
+        {/* Author row + Follow */}
+        <div className="mt-3 flex items-center gap-2.5">
+          <span
+            className="flex size-9 items-center justify-center rounded-full text-[10px] font-bold ring-2 ring-white/30"
             style={{ background: reel.avatarGradient }}
           >
             {reel.author.slice(0, 2).toUpperCase()}
-          </div>
+          </span>
           <div className="flex-1">
-            <p className="text-sm font-semibold leading-tight">{reel.author}</p>
-            <p className="text-[11px] text-white/70">
-              {reel.handle} · {timeAgo(reel.postedAt)}
+            <p className="flex items-center gap-1 text-[13px] font-semibold leading-tight">
+              {reel.handle}
+              <BadgeCheck className="size-3.5 fill-[color:var(--ke-green)] text-white" />
             </p>
+            <p className="text-[11px] text-white/65">{timeAgo(reel.postedAt)} ago</p>
           </div>
           <button
             type="button"
             onClick={() => setFollowing((v) => !v)}
             className={
               "tap rounded-full px-3.5 py-1.5 text-xs font-semibold " +
-              (following ? "bg-white/15 text-white backdrop-blur" : "ke-gradient text-white shadow-[0_6px_18px_rgba(153,0,0,0.45)]")
+              (following
+                ? "border border-white/40 bg-white/10 text-white backdrop-blur"
+                : "bg-white text-black")
             }
           >
             {following ? "Following" : "Follow"}
           </button>
+          <button aria-label="More" className="tap text-white"><MoreHorizontal className="size-5" /></button>
         </div>
-        <span className="mt-3 inline-block rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur">
-          {reel.category}
-        </span>
-        <h2 className="mt-2 font-serif text-xl leading-tight">{reel.title}</h2>
-        <p className="mt-1 text-[13px] leading-snug text-white/85 not-italic">{reel.caption}</p>
+
+        {/* Inline action stats */}
+        <div className="mt-3 flex items-center gap-5 text-white">
+          <InlineAction
+            icon={<Heart className={"size-[18px] " + (liked ? "fill-[color:var(--ke-red)] text-[color:var(--ke-red)]" : "")} />}
+            label={formatCount(likes)}
+            onClick={toggleLike}
+          />
+          <InlineAction icon={<MessageCircle className="size-[18px]" />} label={formatCount(reel.comments)} />
+          <InlineAction
+            icon={<Bookmark className={"size-[18px] " + (saved ? "fill-white" : "")} />}
+            label={formatCount(Math.round(reel.likes * 0.12))}
+            onClick={() => setSaved((v) => !v)}
+          />
+        </div>
+
+        {/* Music ticker */}
+        <div className="mt-3 flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur">
+          <Music2 className="size-3.5 text-white" />
+          <p className="flex-1 truncate text-[11px] text-white/85">
+            Original audio · {reel.author} · Civic explainer
+          </p>
+        </div>
       </div>
     </section>
   );
 }
 
-function ActionButton({
+function InlineAction({
   icon,
   label,
-  active,
   onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-  onClick?: () => void;
-}) {
+}: { icon: React.ReactNode; label: string; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="tap flex flex-col items-center gap-1">
-      <span
-        className={
-          "flex size-11 items-center justify-center rounded-full backdrop-blur transition-all " +
-          (active ? "ke-gradient text-white" : "bg-white/15 text-white")
-        }
-      >
-        {icon}
-      </span>
-      <span className="text-[10px] font-medium">{label}</span>
+    <button type="button" onClick={onClick} className="tap flex items-center gap-1.5">
+      {icon}
+      <span className="text-[12px] font-semibold">{label}</span>
     </button>
   );
 }
