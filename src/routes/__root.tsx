@@ -12,7 +12,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import {
   Home, BookOpen, MessagesSquare, Landmark, Search, Play, LayoutGrid,
   MoreHorizontal, X, TrendingUp, Newspaper, CalendarDays, MapPin,
-  ShieldCheck, Scale, Building2, BarChart3, UserCircle, Settings,
+  ShieldCheck, Scale, Building2, BarChart3, UserCircle, Settings, Sparkles,
 } from "lucide-react";
 
 import appCss from "../styles.css?url";
@@ -263,6 +263,7 @@ function RootComponent() {
   }, [pathname, router]);
 
   const isImmersive = pathname === "/onboarding" || pathname === "/reels";
+  const isAssistant = pathname === "/assistant" || pathname.startsWith("/agents/");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -271,6 +272,20 @@ function RootComponent() {
         <main key={pathname} className="flex-1 animate-fade-up pb-2">
           <Outlet />
         </main>
+        {!isImmersive && !isAssistant && (
+          <Link
+            to="/assistant"
+            aria-label="Ask CivicIntel AI"
+            className="tap fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full text-white ring-1 ring-white/15 transition-transform hover:scale-105 active:scale-95"
+            style={{
+              background: "linear-gradient(135deg,#000 0%,#990000 55%,#006600 100%)",
+              boxShadow: "0 14px 32px -10px rgba(153,0,0,.55), 0 8px 20px -8px rgba(0,102,0,.45)",
+            }}
+          >
+            <Sparkles className="size-5" />
+            <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-white/10 animate-pulse" />
+          </Link>
+        )}
         {pathname !== "/onboarding" && <BottomNav onOpenMore={() => setMoreOpen(true)} />}
         <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
       </div>
