@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.yourapp.id',
   appName: 'Civic Intel',
-  webDir: 'dist/client'
+  webDir: 'dist'
 };
 
 export default config;
