@@ -1,5 +1,5 @@
 {
   "appId": "com.civicintel.app",
   "appName": "Civic Intel",
-  "webDir": "dist"
+  "webDir": "dist/server"
 }
