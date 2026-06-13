@@ -13,6 +13,7 @@ import {
   Home, BookOpen, MessagesSquare, Landmark, Search, Play, LayoutGrid,
   MoreHorizontal, X, TrendingUp, Newspaper, CalendarDays, MapPin,
   ShieldCheck, Scale, Building2, BarChart3, UserCircle, Settings, Sparkles,
+  ChevronRight,
 } from "lucide-react";
 
 import appCss from "../styles.css?url";
