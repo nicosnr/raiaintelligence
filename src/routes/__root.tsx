@@ -138,18 +138,18 @@ const navItems = [
 ] as const;
 
 const moreItems = [
-  { to: "/posts", label: "Posts", icon: LayoutGrid, group: "Feed" },
-  { to: "/economy", label: "Economy", icon: TrendingUp, group: "Civic data" },
-  { to: "/calendar", label: "Calendar", icon: CalendarDays, group: "Civic data" },
-  { to: "/services", label: "Services", icon: MapPin, group: "Civic data" },
-  { to: "/representatives", label: "Reps", icon: Landmark, group: "Civic data" },
-  { to: "/glossary", label: "Glossary", icon: Search, group: "Civic data" },
-  { to: "/agents/sentinel", label: "Sentinel", icon: ShieldCheck, group: "AI agents" },
-  { to: "/agents/justice", label: "Justice", icon: Scale, group: "AI agents" },
-  { to: "/agents/civicgov", label: "CivicGov", icon: Building2, group: "AI agents" },
-  { to: "/polls", label: "Polls", icon: BarChart3, group: "Community" },
-  { to: "/profile", label: "Profile", icon: UserCircle, group: "Account" },
-  { to: "/settings", label: "Settings", icon: Settings, group: "Account" },
+  { to: "/posts", label: "Posts", desc: "Single-column civic timeline", icon: LayoutGrid, group: "Feed" },
+  { to: "/economy", label: "Economy", desc: "FX, fuel, commodities & wallet", icon: TrendingUp, group: "Civic data" },
+  { to: "/calendar", label: "Calendar", desc: "Public hearings & deadlines", icon: CalendarDays, group: "Civic data" },
+  { to: "/services", label: "Services", desc: "Huduma, eCitizen & county offices", icon: MapPin, group: "Civic data" },
+  { to: "/representatives", label: "Representatives", desc: "MPs, MCAs and senators", icon: Landmark, group: "Civic data" },
+  { to: "/glossary", label: "Glossary", desc: "Civic & legal terms explained", icon: Search, group: "Civic data" },
+  { to: "/agents/sentinel", label: "Sentinel AI", desc: "Public safety guidance", icon: ShieldCheck, group: "AI agents" },
+  { to: "/agents/justice", label: "Justice AI", desc: "Plain-language legal literacy", icon: Scale, group: "AI agents" },
+  { to: "/agents/civicgov", label: "CivicGov AI", desc: "How to access public services", icon: Building2, group: "AI agents" },
+  { to: "/polls", label: "Polls", desc: "Non-partisan community sentiment", icon: BarChart3, group: "Community" },
+  { to: "/profile", label: "Profile", desc: "Your saved topics & activity", icon: UserCircle, group: "Account" },
+  { to: "/settings", label: "Settings", desc: "Theme, notifications & language", icon: Settings, group: "Account" },
 ] as const;
 
 function BottomNav({ onOpenMore }: { onOpenMore: () => void }) {
@@ -201,48 +201,68 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
         type="button"
         aria-label="Close menu"
         onClick={onClose}
-        className="absolute inset-0 bg-black/55 backdrop-blur-sm animate-fade-up"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-up"
       />
       <div
         role="dialog"
         aria-label="More navigation"
-        className="relative z-10 w-full max-w-[480px] rounded-t-3xl border-t border-border bg-background p-5 animate-fade-up"
+        className="relative z-10 max-h-[88dvh] w-full max-w-[480px] overflow-y-auto rounded-t-3xl border-t border-border bg-background animate-fade-up"
         style={{ boxShadow: "var(--shadow-float)" }}
       >
-        <div className="mb-3 flex items-center justify-between">
-          <p className="font-serif text-xl">Explore CivicIntel</p>
+        {/* Sticky header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-5 pb-3 pt-4 backdrop-blur">
+          <div className="flex items-center gap-2">
+            <span className="mr-1 block h-1.5 w-10 rounded-full bg-border" aria-hidden="true" />
+          </div>
+          <p className="absolute left-1/2 top-4 -translate-x-1/2 font-serif text-lg italic">Explore</p>
           <button onClick={onClose} aria-label="Close" className="tap rounded-full bg-secondary p-2">
             <X className="size-4" />
           </button>
         </div>
-        {groups.map((g) => (
-          <div key={g} className="mb-4 last:mb-0">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{g}</p>
-            <ul className="grid grid-cols-3 gap-2">
-              {moreItems.filter((i) => i.group === g).map(({ to, label, icon: Icon }) => (
-                <li key={to}>
-                  <Link
-                    to={to}
-                    onClick={onClose}
-                    className="tap flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-2 py-3 text-center text-[11px] font-semibold"
-                  >
-                    <span
-                      className="flex size-9 items-center justify-center rounded-full text-white"
-                      style={{ background: "var(--gradient-ke)" }}
+
+        <div className="px-4 py-4">
+          {groups.map((g) => (
+            <section key={g} className="mb-5 last:mb-2">
+              <div className="mb-2 flex items-center justify-between px-1">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{g}</p>
+                <span className="text-[11px] text-muted-foreground">
+                  {moreItems.filter((i) => i.group === g).length}
+                </span>
+              </div>
+              <ul className="overflow-hidden rounded-2xl border border-border bg-card">
+                {moreItems.filter((i) => i.group === g).map(({ to, label, desc, icon: Icon }, idx, arr) => (
+                  <li key={to} className={idx < arr.length - 1 ? "border-b border-border" : ""}>
+                    <Link
+                      to={to}
+                      onClick={onClose}
+                      className="tap flex items-center gap-3 px-3 py-3 active:bg-secondary/60"
                     >
-                      <Icon className="size-[16px]" />
-                    </span>
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                      <span
+                        className="flex size-10 shrink-0 items-center justify-center rounded-xl text-white"
+                        style={{ background: "var(--gradient-ke, linear-gradient(135deg,#000,#990000 60%,#006600))" }}
+                      >
+                        <Icon className="size-[18px]" />
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-[14px] font-semibold leading-tight">{label}</span>
+                        <span className="block truncate text-[11.5px] text-muted-foreground">{desc}</span>
+                      </span>
+                      <ChevronRight className="size-4 text-muted-foreground" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+          <p className="px-1 pt-1 text-[10.5px] text-muted-foreground">
+            CivicIntel is educational only — never legal advice or political commentary.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
+
 
 
 function RootComponent() {
