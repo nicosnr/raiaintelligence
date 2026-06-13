@@ -1,9 +1,9 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.civicintel.app',
-  appName: 'Civic Intel',
-  webDir: 'dist'
+  appId: 'com.yourapp.id',
+  appName: 'Your App',
+  webDir: 'dist/client',  // ← point here directly
 };
 
 export default config;
