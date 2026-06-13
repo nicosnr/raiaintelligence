@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Bell, Search, ShieldCheck, Eye, EyeOff, ArrowUpRight, Plus,
-  Newspaper, Play, LayoutGrid, BookOpen, TrendingUp, CalendarDays,
-  MapPin, Landmark, Scale, Building2, BarChart3, UserCircle, Settings,
+  Bell, Search, ShieldCheck, ArrowUpRight, ArrowRight,
+  Newspaper, Play, BookOpen, TrendingUp, CalendarDays,
+  MapPin, MessagesSquare, Scale, Building2,
 } from "lucide-react";
 import { useState } from "react";
 import { topics } from "@/lib/civic-content";
@@ -24,31 +24,28 @@ export const Route = createFileRoute("/")({
 
 const CATEGORIES = ["For you", "Rights", "Government", "Elections", "Public finance"] as const;
 
-const QUICK_ACTIONS = [
-  { to: "/news", label: "News", icon: Newspaper, group: "Feed" },
-  { to: "/reels", label: "Reels", icon: Play, group: "Feed" },
-  { to: "/posts", label: "Posts", icon: LayoutGrid, group: "Feed" },
-  { to: "/learn", label: "Learn", icon: BookOpen, group: "Feed" },
-  { to: "/economy", label: "Economy", icon: TrendingUp, group: "Civic data" },
-  { to: "/calendar", label: "Calendar", icon: CalendarDays, group: "Civic data" },
-  { to: "/services", label: "Services", icon: MapPin, group: "Civic data" },
-  { to: "/representatives", label: "Reps", icon: Landmark, group: "Civic data" },
-  { to: "/glossary", label: "Glossary", icon: Search, group: "Civic data" },
-  { to: "/agents/sentinel", label: "Sentinel", icon: ShieldCheck, group: "AI agents" },
-  { to: "/agents/justice", label: "Justice", icon: Scale, group: "AI agents" },
-  { to: "/agents/civicgov", label: "CivicGov", icon: Building2, group: "AI agents" },
-  { to: "/polls", label: "Polls", icon: BarChart3, group: "Community" },
-  { to: "/profile", label: "Profile", icon: UserCircle, group: "Account" },
-  { to: "/settings", label: "Settings", icon: Settings, group: "Account" },
+const SERVICES = [
+  { to: "/news", label: "News", icon: Newspaper },
+  { to: "/reels", label: "Reels", icon: Play },
+  { to: "/learn", label: "Learn", icon: BookOpen },
+  { to: "/economy", label: "Economy", icon: TrendingUp },
+  { to: "/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/services", label: "Services", icon: MapPin },
+  { to: "/assistant", label: "Ask AI", icon: MessagesSquare },
+  { to: "/agents/justice", label: "Justice", icon: Scale },
+  { to: "/agents/civicgov", label: "CivicGov", icon: Building2 },
+] as const;
+
+const EVENTS = [
+  { tag: "Live", title: "National Assembly: Public Finance debate", when: "Today · 2:30 PM" },
+  { tag: "Hearing", title: "Senate County Allocation hearings", when: "Tomorrow · 10:00 AM" },
+  { tag: "Deadline", title: "KRA monthly VAT filing deadline", when: "20 Jun · End of day" },
 ] as const;
 
 function Index() {
   const [active, setActive] = useState<(typeof CATEGORIES)[number]>("For you");
-  const [hidden, setHidden] = useState(false);
   const featured = topics[0];
   const rest = topics.slice(1, 4);
-
-  const groups = Array.from(new Set(QUICK_ACTIONS.map((a) => a.group)));
 
   return (
     <div className="flex flex-col bg-background pb-28">
@@ -68,9 +65,9 @@ function Index() {
           </div>
         </Link>
         <div className="flex items-center gap-2">
-          <button aria-label="Search" className="tap flex size-10 items-center justify-center rounded-full border border-border bg-card">
+          <Link to="/glossary" aria-label="Search" className="tap flex size-10 items-center justify-center rounded-full border border-border bg-card">
             <Search className="size-[18px]" />
-          </button>
+          </Link>
           <button aria-label="Notifications" className="tap relative flex size-10 items-center justify-center rounded-full border border-border bg-card">
             <Bell className="size-[18px]" />
             <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[color:var(--ke-red,#990000)]" />
@@ -78,78 +75,88 @@ function Index() {
         </div>
       </header>
 
-      {/* Hero balance-style card */}
+      {/* Hero "welcome" card — inspired by the insurance app */}
       <section className="px-4 pt-5">
         <div
-          className="relative overflow-hidden rounded-3xl px-5 pb-6 pt-5 text-white"
-          style={{ background: "linear-gradient(155deg,#0b0b0f 0%,#1d0a14 50%,#0a2410 100%)" }}
+          className="relative overflow-hidden rounded-[28px] px-5 pb-5 pt-6 text-white"
+          style={{
+            background:
+              "linear-gradient(135deg,#1a0808 0%,#5c1212 28%,#a32a1f 55%,#d97b3a 85%,#f4c98a 100%)",
+            boxShadow: "var(--shadow-card)",
+          }}
         >
-          <div className="absolute -top-16 -right-12 h-48 w-48 rounded-full" style={{ background: "radial-gradient(closest-side, rgba(153,0,0,.55), transparent 70%)" }} />
-          <div className="absolute -bottom-20 -left-10 h-48 w-48 rounded-full" style={{ background: "radial-gradient(closest-side, rgba(0,102,0,.5), transparent 70%)" }} />
+          <div className="absolute -top-16 -right-12 h-52 w-52 rounded-full"
+               style={{ background: "radial-gradient(closest-side, rgba(255,255,255,.35), transparent 70%)" }} />
+          <div className="absolute -bottom-24 -left-12 h-56 w-56 rounded-full"
+               style={{ background: "radial-gradient(closest-side, rgba(0,102,0,.45), transparent 70%)" }} />
 
-          <div className="relative flex items-center gap-2 text-[11px] uppercase tracking-wider text-white/65">
-            Civic knowledge balance
-            <button onClick={() => setHidden((v) => !v)} aria-label="Toggle visibility" className="tap text-white/80">
-              {hidden ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-            </button>
+          <p className="relative text-[12px] text-white/85">Welcome Back</p>
+          <h1 className="relative mt-1 font-serif text-[28px] leading-tight">Mwananchi Kamau</h1>
+
+          {/* Status pill */}
+          <Link
+            to="/learn"
+            className="relative mt-4 flex items-center gap-3 rounded-full bg-white/12 px-2 py-1.5 backdrop-blur ring-1 ring-white/20"
+          >
+            <span className="flex size-7 items-center justify-center rounded-full bg-white/90 text-[11px] font-bold text-[color:var(--ke-red,#990000)]">3</span>
+            <span className="flex-1 text-[12.5px] font-medium">You have 3 new explainers ready</span>
+            <ArrowRight className="size-4 opacity-90" />
+          </Link>
+
+          {/* Knowledge meter card */}
+          <div className="relative mt-3 rounded-2xl bg-white/12 px-4 py-3 backdrop-blur ring-1 ring-white/15">
+            <p className="text-[11px] uppercase tracking-wider text-white/75">Civic knowledge</p>
+            <div className="mt-1 flex items-end justify-between">
+              <p className="font-serif text-2xl italic leading-none">12 topics learned</p>
+              <span className="text-[11px] text-white/80">62%</span>
+            </div>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
+              <div className="h-full rounded-full bg-white/85" style={{ width: "62%" }} />
+            </div>
           </div>
-          <p className="relative mt-1 font-serif text-[40px] leading-none italic tracking-tight">
-            {hidden ? "•• topics" : "12 topics"}
-          </p>
-          <p className="relative mt-2 text-[12px] text-white/65">
-            <span className="text-[color:var(--ke-green,#19a974)]">▲ 3 new</span> explainers this week
-          </p>
 
-          <div className="relative mt-5 grid grid-cols-2 gap-3">
-            <StatCard
-              tone="red"
-              label="Rights"
-              value="47 Articles"
-              hint="Bill of Rights"
-            />
-            <StatCard
-              tone="green"
-              label="Government"
-              value="3 Branches"
-              hint="Checks & balances"
-            />
+          <div className="relative mt-4 flex items-center justify-between">
+            <div className="text-[11px] text-white/80">Bill of Rights · Articles 19–59</div>
+            <Link
+              to="/assistant"
+              className="tap rounded-full bg-black/55 px-4 py-2 text-[12px] font-semibold text-white ring-1 ring-white/15"
+            >
+              Ask CivicIntel
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Quick Actions */}
+      {/* Services — chip row */}
       <section className="mt-6 px-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-[15px] font-semibold">Quick Actions</h2>
-          <Link to="/settings" className="text-xs font-medium text-muted-foreground">Edit</Link>
+          <h2 className="text-[15px] font-semibold">Services</h2>
+          <button onClick={() => {}} className="text-xs font-medium text-muted-foreground">See all</button>
         </div>
-        {groups.map((g) => (
-          <div key={g} className="mt-3">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{g}</p>
-            <ul className="grid grid-cols-4 gap-2">
-              {QUICK_ACTIONS.filter((a) => a.group === g).map(({ to, label, icon: Icon }) => (
-                <li key={to}>
-                  <Link
-                    to={to}
-                    className="tap flex flex-col items-center gap-1.5 rounded-2xl border border-border bg-card px-1 py-2.5 text-center text-[10.5px] font-semibold"
+        <div className="mt-3 -mx-5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <ul className="flex gap-2">
+            {SERVICES.map(({ to, label, icon: Icon }) => (
+              <li key={to} className="shrink-0">
+                <Link
+                  to={to}
+                  className="tap flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-[12.5px] font-semibold"
+                >
+                  <span
+                    className="flex size-6 items-center justify-center rounded-full text-white"
+                    style={{ background: "var(--gradient-ke, linear-gradient(135deg,#000,#990000 60%,#006600))" }}
                   >
-                    <span
-                      className="flex size-9 items-center justify-center rounded-full text-white"
-                      style={{ background: "var(--gradient-ke, linear-gradient(135deg,#000,#990000 60%,#006600))" }}
-                    >
-                      <Icon className="size-4" />
-                    </span>
-                    <span className="truncate w-full">{label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                    <Icon className="size-3.5" />
+                  </span>
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {/* Pill tabs */}
-      <div className="mt-6 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="mt-5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex gap-2">
           {CATEGORIES.map((c) => (
             <button
@@ -164,10 +171,48 @@ function Index() {
         </div>
       </div>
 
-      {/* Featured */}
-      <section className="px-5 pt-4">
+      {/* Events — horizontal card carousel */}
+      <section className="mt-4 px-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-[15px] font-semibold">Featured</h2>
+          <h2 className="text-[15px] font-semibold">Events</h2>
+          <Link to="/calendar" className="text-xs font-medium text-accent">See all</Link>
+        </div>
+        <div className="mt-3 -mx-5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <ul className="flex gap-3">
+            {EVENTS.map((e) => (
+              <li key={e.title} className="w-[230px] shrink-0">
+                <Link
+                  to="/calendar"
+                  className="block overflow-hidden rounded-2xl border border-border bg-card"
+                  style={{ boxShadow: "var(--shadow-card)" }}
+                >
+                  <div
+                    className="relative aspect-[16/10] w-full"
+                    style={{
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%), url(${jamhuriBg.url})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  >
+                    <span className="absolute left-2 top-2 rounded-full bg-background/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+                      {e.tag}
+                    </span>
+                  </div>
+                  <div className="p-3">
+                    <p className="line-clamp-2 text-[13px] font-semibold leading-snug">{e.title}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">{e.when}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Featured "card" */}
+      <section className="mt-3 px-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] font-semibold">Featured explainer</h2>
           <Link to="/learn" className="text-xs font-medium text-accent">See all</Link>
         </div>
         <Link
@@ -229,25 +274,6 @@ function Index() {
       <p className="mx-5 mt-6 rounded-2xl border border-border bg-secondary p-3 text-[11px] text-muted-foreground">
         CivicIntel is educational only — never legal advice or political commentary.
       </p>
-    </div>
-  );
-}
-
-function StatCard({ tone, label, value, hint }: { tone: "red" | "green"; label: string; value: string; hint: string }) {
-  const bg =
-    tone === "red"
-      ? "linear-gradient(150deg,#990000 0%,#3d0a0a 100%)"
-      : "linear-gradient(150deg,#006600 0%,#0a2410 100%)";
-  return (
-    <div className="relative overflow-hidden rounded-2xl p-3 text-white" style={{ background: bg }}>
-      <div className="flex items-center justify-between">
-        <span className="flex size-8 items-center justify-center rounded-full bg-white/15 ring-1 ring-white/20">
-          <Plus className="size-4" />
-        </span>
-        <span className="text-[10px] uppercase tracking-wider text-white/70">{hint}</span>
-      </div>
-      <p className="mt-6 text-[12px] text-white/80">{label}</p>
-      <p className="font-serif text-xl italic leading-tight">{value}</p>
     </div>
   );
 }
