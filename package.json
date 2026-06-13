@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "build": "vite build && cp dist/client/index.html dist/index.html && cp -r dist/client/assets dist/assets",
+    "build": "vite build",
     "ionic:build": "npm run build"
   },
   "dependencies": {
