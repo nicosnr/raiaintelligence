@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const inputSchema = z.object({
   persona: z.enum(["civic", "sentinel", "justice", "civicgov"]).optional(),
+  lang: z.enum(["en", "sw"]).optional(),
   messages: z
     .array(
       z.object({
