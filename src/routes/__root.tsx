@@ -19,6 +19,7 @@ import {
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { LanguageProvider } from "../lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -142,6 +143,7 @@ const moreItems = [
   { to: "/economy", label: "Economy", desc: "FX, fuel, commodities & wallet", icon: TrendingUp, group: "Civic data" },
   { to: "/calendar", label: "Calendar", desc: "Public hearings & deadlines", icon: CalendarDays, group: "Civic data" },
   { to: "/services", label: "Services", desc: "Huduma, eCitizen & county offices", icon: MapPin, group: "Civic data" },
+  { to: "/counties", label: "Counties", desc: "All 47 counties at a glance", icon: MapPin, group: "Civic data" },
   { to: "/representatives", label: "Representatives", desc: "MPs, MCAs and senators", icon: Landmark, group: "Civic data" },
   { to: "/glossary", label: "Glossary", desc: "Civic & legal terms explained", icon: Search, group: "Civic data" },
   { to: "/agents/sentinel", label: "Sentinel AI", desc: "Public safety guidance", icon: ShieldCheck, group: "AI agents" },
@@ -288,28 +290,30 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="app-frame flex flex-col">
-        {!isImmersive && <ThemeToggle />}
-        <main key={pathname} className="flex-1 animate-fade-up pb-2">
-          <Outlet />
-        </main>
-        {!isImmersive && !isAssistant && (
-          <Link
-            to="/assistant"
-            aria-label="Ask CivicIntel AI"
-            className="tap fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full text-white ring-1 ring-white/15 transition-transform hover:scale-105 active:scale-95"
-            style={{
-              background: "linear-gradient(135deg,#000 0%,#990000 55%,#006600 100%)",
-              boxShadow: "0 14px 32px -10px rgba(153,0,0,.55), 0 8px 20px -8px rgba(0,102,0,.45)",
-            }}
-          >
-            <Sparkles className="size-5" />
-            <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-white/10 animate-pulse" />
-          </Link>
-        )}
-        {pathname !== "/onboarding" && <BottomNav onOpenMore={() => setMoreOpen(true)} />}
-        <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
-      </div>
+      <LanguageProvider>
+        <div className="app-frame flex flex-col">
+          {!isImmersive && <ThemeToggle />}
+          <main key={pathname} className="flex-1 animate-fade-up pb-2">
+            <Outlet />
+          </main>
+          {!isImmersive && !isAssistant && (
+            <Link
+              to="/assistant"
+              aria-label="Ask CivicIntel AI"
+              className="tap fixed bottom-20 right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full text-white ring-1 ring-white/15 transition-transform hover:scale-105 active:scale-95"
+              style={{
+                background: "linear-gradient(135deg,#000 0%,#990000 55%,#006600 100%)",
+                boxShadow: "0 14px 32px -10px rgba(153,0,0,.55), 0 8px 20px -8px rgba(0,102,0,.45)",
+              }}
+            >
+              <Sparkles className="size-5" />
+              <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-white/10 animate-pulse" />
+            </Link>
+          )}
+          {pathname !== "/onboarding" && <BottomNav onOpenMore={() => setMoreOpen(true)} />}
+          <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
+        </div>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Bell, ShieldCheck } from "lucide-react";
+import { Moon, Sun, Bell, ShieldCheck, Languages } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
+  const { lang, setLang, t } = useI18n();
   const [dark, setDark] = useState(false);
   const [notif, setNotif] = useState(true);
 
@@ -39,6 +41,34 @@ function SettingsPage() {
   return (
     <div className="pb-24">
       <PageHeader eyebrow="App settings" title="Preferences" description="Control the experience and data on this device." />
+
+      <div className="mx-4 mb-2 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-full bg-secondary">
+            <Languages className="size-4" />
+          </span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold">{t("settings.language")}</p>
+            <p className="text-[11px] text-muted-foreground">{t("settings.language.desc")}</p>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          {(["en", "sw"] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => setLang(l)}
+              className={
+                "tap rounded-xl border px-3 py-2 text-sm font-medium " +
+                (lang === l ? "border-transparent text-white" : "border-border bg-background")
+              }
+              style={lang === l ? { background: "var(--gradient-ke, linear-gradient(135deg,#000,#990000 60%,#006600))" } : undefined}
+              aria-pressed={lang === l}
+            >
+              {l === "en" ? "English" : "Kiswahili"}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <ul className="mx-4 space-y-2">
         <Row
