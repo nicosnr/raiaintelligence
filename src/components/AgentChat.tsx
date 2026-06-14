@@ -149,6 +149,36 @@ export function AgentChat({
       >
         <div className="flex items-end gap-2">
           <label htmlFor="ask" className="sr-only">Ask a question</label>
+          {voiceIn && (
+            <button
+              type="button"
+              onClick={toggleMic}
+              aria-label={listening ? "Stop listening" : "Speak"}
+              aria-pressed={listening}
+              className={
+                "tap inline-flex size-11 shrink-0 items-center justify-center rounded-full border " +
+                (listening ? "border-transparent text-white animate-pulse" : "border-input bg-background text-foreground")
+              }
+              style={listening ? { background: accentGradient } : undefined}
+            >
+              {listening ? <MicOff className="size-4" /> : <Mic className="size-4" />}
+            </button>
+          )}
+          {voiceOut && (
+            <button
+              type="button"
+              onClick={toggleSpeak}
+              aria-label={speaking ? "Stop reading" : "Read replies aloud"}
+              aria-pressed={autoSpeak}
+              className={
+                "tap inline-flex size-11 shrink-0 items-center justify-center rounded-full border " +
+                (autoSpeak ? "border-transparent text-white" : "border-input bg-background text-foreground")
+              }
+              style={autoSpeak ? { background: accentGradient } : undefined}
+            >
+              {speaking ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+            </button>
+          )}
           <textarea
             id="ask"
             value={input}
@@ -160,7 +190,7 @@ export function AgentChat({
               }
             }}
             rows={1}
-            placeholder={`Ask ${title}…`}
+            placeholder={listening ? "Listening…" : `Ask ${title}…`}
             className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-input bg-background px-3 py-2.5 text-[15px] placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
           />
           <button
