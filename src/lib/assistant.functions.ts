@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const inputSchema = z.object({
   persona: z.enum(["civic", "sentinel", "justice", "civicgov"]).optional(),
+  lang: z.enum(["en", "sw"]).optional(),
   messages: z
     .array(
       z.object({
@@ -51,7 +52,11 @@ export const askAssistant = createServerFn({ method: "POST" })
     }
 
     const personaPrompt = PERSONAS[data.persona ?? "civic"];
-    const systemPrompt = `${personaPrompt}\n\n${CORE_RULES}`;
+    const langRule =
+      data.lang === "sw"
+        ? "\n\nLANGUAGE: Reply in clear, standard Kiswahili (Kenyan usage). Keep legal/government proper nouns in English where common (e.g. eCitizen, Huduma, IPOA)."
+        : "\n\nLANGUAGE: Reply in clear English unless the user writes in another language, in which case match it.";
+    const systemPrompt = `${personaPrompt}\n\n${CORE_RULES}${langRule}`;
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

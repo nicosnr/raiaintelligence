@@ -21,6 +21,7 @@ import { Route as NewsRouteImport } from './routes/news'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as EconomyRouteImport } from './routes/economy'
+import { Route as CountiesRouteImport } from './routes/counties'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
@@ -90,6 +91,11 @@ const EconomyRoute = EconomyRouteImport.update({
   path: '/economy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CountiesRoute = CountiesRouteImport.update({
+  id: '/counties',
+  path: '/counties',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/counties': typeof CountiesRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/counties': typeof CountiesRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/counties': typeof CountiesRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
   '/learn': typeof LearnRouteWithChildren
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/counties'
     | '/economy'
     | '/glossary'
     | '/learn'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/counties'
     | '/economy'
     | '/glossary'
     | '/learn'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/counties'
     | '/economy'
     | '/glossary'
     | '/learn'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
+  CountiesRoute: typeof CountiesRoute
   EconomyRoute: typeof EconomyRoute
   GlossaryRoute: typeof GlossaryRoute
   LearnRoute: typeof LearnRouteWithChildren
@@ -375,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EconomyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/counties': {
+      id: '/counties'
+      path: '/counties'
+      fullPath: '/counties'
+      preLoaderRoute: typeof CountiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -449,6 +469,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRoute,
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
+  CountiesRoute: CountiesRoute,
   EconomyRoute: EconomyRoute,
   GlossaryRoute: GlossaryRoute,
   LearnRoute: LearnRouteWithChildren,
@@ -468,13 +489,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

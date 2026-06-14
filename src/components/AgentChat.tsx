@@ -1,8 +1,10 @@
 import { useServerFn } from "@tanstack/react-start";
-import { useRef, useState, type ReactNode } from "react";
-import { Send, ShieldCheck, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Mic, MicOff, Send, ShieldCheck, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { askAssistant } from "@/lib/assistant.functions";
 import { PageHeader } from "@/components/PageHeader";
+import { useI18n } from "@/lib/i18n";
+import { isSpeechOutputSupported, isVoiceInputSupported, speak, startListening, stopSpeaking } from "@/lib/voice";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -26,11 +28,40 @@ export function AgentChat({
   accentGradient = "linear-gradient(135deg,#000 0%,#990000 55%,#006600 100%)",
 }: AgentChatProps) {
   const ask = useServerFn(askAssistant);
+  const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const stopRef = useRef<(() => void) | null>(null);
+
+  const voiceIn = isVoiceInputSupported();
+  const voiceOut = isSpeechOutputSupported();
+
+  useEffect(() => () => { stopRef.current?.(); stopSpeaking(); }, []);
+
+  function toggleMic() {
+    if (listening) { stopRef.current?.(); setListening(false); return; }
+    setError(null);
+    setListening(true);
+    stopRef.current = startListening({
+      lang,
+      onResult: (text) => { setInput((prev) => (prev ? prev + " " : "") + text); send(text); },
+      onEnd: () => setListening(false),
+      onError: (m) => { setError(m); setListening(false); },
+    });
+  }
+
+  function toggleSpeak() {
+    if (speaking) { stopSpeaking(); setSpeaking(false); setAutoSpeak(false); return; }
+    setAutoSpeak(true);
+    const last = [...messages].reverse().find((m) => m.role === "assistant");
+    if (last) { speak(last.content, lang); setSpeaking(true); }
+  }
 
   async function send(text: string) {
     const trimmed = text.trim();
@@ -41,8 +72,9 @@ export function AgentChat({
     setInput("");
     setLoading(true);
     try {
-      const { reply } = await ask({ data: { persona, messages: next } });
+      const { reply } = await ask({ data: { persona, lang, messages: next } });
       setMessages([...next, { role: "assistant", content: reply }]);
+      if (autoSpeak && voiceOut) { speak(reply, lang); setSpeaking(true); }
       requestAnimationFrame(() => {
         scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
       });
@@ -117,6 +149,36 @@ export function AgentChat({
       >
         <div className="flex items-end gap-2">
           <label htmlFor="ask" className="sr-only">Ask a question</label>
+          {voiceIn && (
+            <button
+              type="button"
+              onClick={toggleMic}
+              aria-label={listening ? "Stop listening" : "Speak"}
+              aria-pressed={listening}
+              className={
+                "tap inline-flex size-11 shrink-0 items-center justify-center rounded-full border " +
+                (listening ? "border-transparent text-white animate-pulse" : "border-input bg-background text-foreground")
+              }
+              style={listening ? { background: accentGradient } : undefined}
+            >
+              {listening ? <MicOff className="size-4" /> : <Mic className="size-4" />}
+            </button>
+          )}
+          {voiceOut && (
+            <button
+              type="button"
+              onClick={toggleSpeak}
+              aria-label={speaking ? "Stop reading" : "Read replies aloud"}
+              aria-pressed={autoSpeak}
+              className={
+                "tap inline-flex size-11 shrink-0 items-center justify-center rounded-full border " +
+                (autoSpeak ? "border-transparent text-white" : "border-input bg-background text-foreground")
+              }
+              style={autoSpeak ? { background: accentGradient } : undefined}
+            >
+              {speaking ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+            </button>
+          )}
           <textarea
             id="ask"
             value={input}
@@ -128,7 +190,7 @@ export function AgentChat({
               }
             }}
             rows={1}
-            placeholder={`Ask ${title}…`}
+            placeholder={listening ? "Listening…" : `Ask ${title}…`}
             className="max-h-32 min-h-11 flex-1 resize-none rounded-xl border border-input bg-background px-3 py-2.5 text-[15px] placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30"
           />
           <button
