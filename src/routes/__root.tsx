@@ -149,6 +149,7 @@ const moreItems = [
   { to: "/agents/sentinel", label: "Sentinel AI", desc: "Public safety guidance", icon: ShieldCheck, group: "AI agents" },
   { to: "/agents/justice", label: "Justice AI", desc: "Plain-language legal literacy", icon: Scale, group: "AI agents" },
   { to: "/agents/civicgov", label: "CivicGov AI", desc: "How to access public services", icon: Building2, group: "AI agents" },
+  { to: "/voting", label: "Voting", desc: "Subjects of matter — admin-curated", icon: BarChart3, group: "Community" },
   { to: "/polls", label: "Polls", desc: "Non-partisan community sentiment", icon: BarChart3, group: "Community" },
   { to: "/profile", label: "Profile", desc: "Your saved topics & activity", icon: UserCircle, group: "Account" },
   { to: "/settings", label: "Settings", desc: "Theme, notifications & language", icon: Settings, group: "Account" },
