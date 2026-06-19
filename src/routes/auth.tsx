@@ -94,8 +94,12 @@ function AuthPage() {
           disabled={busy}
           className="tap flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold disabled:opacity-50"
         >
-          <span aria-hidden="true">🇬</span> Continue with Google
+          <span aria-hidden="true">🇬</span> Continue with Google (Gmail verified)
         </button>
+        <p className="mt-2 text-center text-[10.5px] text-muted-foreground">
+          Signing in with Google automatically verifies your Gmail address.
+        </p>
+
 
         <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
           <span className="h-px flex-1 bg-border" /> or email <span className="h-px flex-1 bg-border" />
