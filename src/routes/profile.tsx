@@ -14,13 +14,22 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-type Profile = { id: string; display_name: string | null; avatar_url: string | null };
+type Profile = {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  national_id: string | null;
+  phone: string | null;
+};
 
 function ProfilePage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string | null>(null);
+  const [emailVerified, setEmailVerified] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [name, setName] = useState("");
+  const [nationalId, setNationalId] = useState("");
+  const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -32,14 +41,17 @@ function ProfilePage() {
         return;
       }
       setEmail(u.user.email ?? null);
+      setEmailVerified(!!u.user.email_confirmed_at);
       const { data: p } = await supabase
         .from("profiles")
-        .select("id, display_name, avatar_url")
+        .select("id, display_name, avatar_url, national_id, phone")
         .eq("id", u.user.id)
         .maybeSingle();
       if (p) {
-        setProfile(p);
+        setProfile(p as Profile);
         setName(p.display_name ?? "");
+        setNationalId((p as Profile).national_id ?? "");
+        setPhone((p as Profile).phone ?? "");
       }
     })();
   }, [navigate]);
@@ -49,9 +61,25 @@ function ProfilePage() {
     if (!profile) return;
     setBusy(true);
     setStatus(null);
+    const idTrim = nationalId.trim();
+    const phoneTrim = phone.trim();
+    if (idTrim && !/^\d{6,10}$/.test(idTrim)) {
+      setBusy(false);
+      setStatus("National ID must be 6–10 digits.");
+      return;
+    }
+    if (phoneTrim && !/^\+?\d{7,15}$/.test(phoneTrim)) {
+      setBusy(false);
+      setStatus("Phone must be digits, optional leading +.");
+      return;
+    }
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: name })
+      .update({
+        display_name: name,
+        national_id: idTrim || null,
+        phone: phoneTrim || null,
+      })
       .eq("id", profile.id);
     setBusy(false);
     setStatus(error ? error.message : "Saved.");
