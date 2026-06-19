@@ -157,30 +157,6 @@ function ProfilePage() {
 
       <ul className="mx-4 mt-4 space-y-2">
         <ProfileLink to="/voting" icon={<Sparkles className="size-4" />} label="Subjects of matter" />
-
-
-      <form onSubmit={save} className="mx-4 mt-4 space-y-2 rounded-3xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
-        <label htmlFor="dname" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Display name
-        </label>
-        <input
-          id="dname"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
-        />
-        <button
-          type="submit"
-          disabled={busy}
-          className="tap w-full rounded-xl px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
-          style={{ background: "var(--gradient-ke)" }}
-        >
-          {busy ? "Saving…" : "Save"}
-        </button>
-        {status && <p className="text-[11px] text-muted-foreground">{status}</p>}
-      </form>
-
-      <ul className="mx-4 mt-4 space-y-2">
         <ProfileLink to="/polls" icon={<Sparkles className="size-4" />} label="Civic polls" />
         <ProfileLink to="/settings" icon={<Settings className="size-4" />} label="Settings" />
         <li>
@@ -198,7 +174,17 @@ function ProfilePage() {
   );
 }
 
-function ProfileLink({ to, icon, label }: { to: "/polls" | "/settings"; icon: React.ReactNode; label: string }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
+      {children}
+      {hint && <p className="text-[10.5px] text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+function ProfileLink({ to, icon, label }: { to: "/polls" | "/settings" | "/voting"; icon: React.ReactNode; label: string }) {
   return (
     <li>
       <Link to={to} className="tap flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm">
