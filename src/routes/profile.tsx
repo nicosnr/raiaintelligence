@@ -14,13 +14,22 @@ export const Route = createFileRoute("/profile")({
   component: ProfilePage,
 });
 
-type Profile = { id: string; display_name: string | null; avatar_url: string | null };
+type Profile = {
+  id: string;
+  display_name: string | null;
+  avatar_url: string | null;
+  national_id: string | null;
+  phone: string | null;
+};
 
 function ProfilePage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string | null>(null);
+  const [emailVerified, setEmailVerified] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [name, setName] = useState("");
+  const [nationalId, setNationalId] = useState("");
+  const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -32,14 +41,17 @@ function ProfilePage() {
         return;
       }
       setEmail(u.user.email ?? null);
+      setEmailVerified(!!u.user.email_confirmed_at);
       const { data: p } = await supabase
         .from("profiles")
-        .select("id, display_name, avatar_url")
+        .select("id, display_name, avatar_url, national_id, phone")
         .eq("id", u.user.id)
         .maybeSingle();
       if (p) {
-        setProfile(p);
+        setProfile(p as Profile);
         setName(p.display_name ?? "");
+        setNationalId((p as Profile).national_id ?? "");
+        setPhone((p as Profile).phone ?? "");
       }
     })();
   }, [navigate]);
@@ -49,9 +61,25 @@ function ProfilePage() {
     if (!profile) return;
     setBusy(true);
     setStatus(null);
+    const idTrim = nationalId.trim();
+    const phoneTrim = phone.trim();
+    if (idTrim && !/^\d{6,10}$/.test(idTrim)) {
+      setBusy(false);
+      setStatus("National ID must be 6–10 digits.");
+      return;
+    }
+    if (phoneTrim && !/^\+?\d{7,15}$/.test(phoneTrim)) {
+      setBusy(false);
+      setStatus("Phone must be digits, optional leading +.");
+      return;
+    }
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: name })
+      .update({
+        display_name: name,
+        national_id: idTrim || null,
+        phone: phoneTrim || null,
+      })
       .eq("id", profile.id);
     setBusy(false);
     setStatus(error ? error.message : "Saved.");
@@ -84,19 +112,38 @@ function ProfilePage() {
         <div className="flex-1">
           <p className="font-serif text-lg leading-tight">{profile.display_name ?? "Civic learner"}</p>
           <p className="text-[12px] text-muted-foreground">{email}</p>
+          <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+            {emailVerified ? "✓ Gmail verified" : "Email pending"}
+          </p>
         </div>
       </div>
 
-      <form onSubmit={save} className="mx-4 mt-4 space-y-2 rounded-3xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
-        <label htmlFor="dname" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Display name
-        </label>
-        <input
-          id="dname"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
-        />
+      <form onSubmit={save} className="mx-4 mt-4 space-y-3 rounded-3xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <Field label="Display name">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
+        <Field label="National ID" hint="6–10 digits. Used to verify you're a unique voter.">
+          <input
+            inputMode="numeric"
+            value={nationalId}
+            onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+            placeholder="e.g. 33445566"
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
+        <Field label="Phone number" hint="Used for civic alerts. SMS verification coming soon.">
+          <input
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+2547XXXXXXXX"
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
         <button
           type="submit"
           disabled={busy}
@@ -109,6 +156,7 @@ function ProfilePage() {
       </form>
 
       <ul className="mx-4 mt-4 space-y-2">
+        <ProfileLink to="/voting" icon={<Sparkles className="size-4" />} label="Subjects of matter" />
         <ProfileLink to="/polls" icon={<Sparkles className="size-4" />} label="Civic polls" />
         <ProfileLink to="/settings" icon={<Settings className="size-4" />} label="Settings" />
         <li>
@@ -126,7 +174,17 @@ function ProfilePage() {
   );
 }
 
-function ProfileLink({ to, icon, label }: { to: "/polls" | "/settings"; icon: React.ReactNode; label: string }) {
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
+      {children}
+      {hint && <p className="text-[10.5px] text-muted-foreground">{hint}</p>}
+    </div>
+  );
+}
+
+function ProfileLink({ to, icon, label }: { to: "/polls" | "/settings" | "/voting"; icon: React.ReactNode; label: string }) {
   return (
     <li>
       <Link to={to} className="tap flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm">
