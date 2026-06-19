@@ -112,8 +112,52 @@ function ProfilePage() {
         <div className="flex-1">
           <p className="font-serif text-lg leading-tight">{profile.display_name ?? "Civic learner"}</p>
           <p className="text-[12px] text-muted-foreground">{email}</p>
+          <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
+            {emailVerified ? "✓ Gmail verified" : "Email pending"}
+          </p>
         </div>
       </div>
+
+      <form onSubmit={save} className="mx-4 mt-4 space-y-3 rounded-3xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <Field label="Display name">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
+        <Field label="National ID" hint="6–10 digits. Used to verify you're a unique voter.">
+          <input
+            inputMode="numeric"
+            value={nationalId}
+            onChange={(e) => setNationalId(e.target.value.replace(/\D/g, ""))}
+            placeholder="e.g. 33445566"
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
+        <Field label="Phone number" hint="Used for civic alerts. SMS verification coming soon.">
+          <input
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+2547XXXXXXXX"
+            className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring/30"
+          />
+        </Field>
+        <button
+          type="submit"
+          disabled={busy}
+          className="tap w-full rounded-xl px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+          style={{ background: "var(--gradient-ke)" }}
+        >
+          {busy ? "Saving…" : "Save"}
+        </button>
+        {status && <p className="text-[11px] text-muted-foreground">{status}</p>}
+      </form>
+
+      <ul className="mx-4 mt-4 space-y-2">
+        <ProfileLink to="/voting" icon={<Sparkles className="size-4" />} label="Subjects of matter" />
+
 
       <form onSubmit={save} className="mx-4 mt-4 space-y-2 rounded-3xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
         <label htmlFor="dname" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
