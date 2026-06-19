@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VotingRouteImport } from './routes/voting'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RepresentativesRouteImport } from './routes/representatives'
@@ -31,6 +32,11 @@ import { Route as AgentsSentinelRouteImport } from './routes/agents.sentinel'
 import { Route as AgentsJusticeRouteImport } from './routes/agents.justice'
 import { Route as AgentsCivicgovRouteImport } from './routes/agents.civicgov'
 
+const VotingRoute = VotingRouteImport.update({
+  id: '/voting',
+  path: '/voting',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
@@ -297,6 +309,7 @@ export interface RootRouteChildren {
   RepresentativesRoute: typeof RepresentativesRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
+  VotingRoute: typeof VotingRoute
   AgentsCivicgovRoute: typeof AgentsCivicgovRoute
   AgentsJusticeRoute: typeof AgentsJusticeRoute
   AgentsSentinelRoute: typeof AgentsSentinelRoute
@@ -304,6 +317,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/voting': {
+      id: '/voting'
+      path: '/voting'
+      fullPath: '/voting'
+      preLoaderRoute: typeof VotingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -482,6 +502,7 @@ const rootRouteChildren: RootRouteChildren = {
   RepresentativesRoute: RepresentativesRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
+  VotingRoute: VotingRoute,
   AgentsCivicgovRoute: AgentsCivicgovRoute,
   AgentsJusticeRoute: AgentsJusticeRoute,
   AgentsSentinelRoute: AgentsSentinelRoute,
