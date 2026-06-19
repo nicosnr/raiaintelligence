@@ -131,6 +131,8 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          national_id: string | null
+          phone: string | null
           updated_at: string
         }
         Insert: {
@@ -138,6 +140,8 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          national_id?: string | null
+          phone?: string | null
           updated_at?: string
         }
         Update: {
@@ -145,6 +149,143 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          national_id?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      voting_topic_options: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          position: number
+          topic_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          position?: number
+          topic_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          position?: number
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voting_topic_options_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "voting_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voting_topic_votes: {
+        Row: {
+          created_at: string
+          id: string
+          option_id: string
+          topic_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_id: string
+          topic_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_id?: string
+          topic_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voting_topic_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "voting_topic_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voting_topic_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "voting_topic_tallies"
+            referencedColumns: ["option_id"]
+          },
+          {
+            foreignKeyName: "voting_topic_votes_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "voting_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voting_topics: {
+        Row: {
+          category: string
+          closes_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          closes_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          closes_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          title?: string
           updated_at?: string
         }
         Relationships: []
@@ -169,12 +310,36 @@ export type Database = {
           },
         ]
       }
+      voting_topic_tallies: {
+        Row: {
+          label: string | null
+          option_id: string | null
+          position: number | null
+          topic_id: string | null
+          votes: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voting_topic_options_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "voting_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -301,6 +466,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
