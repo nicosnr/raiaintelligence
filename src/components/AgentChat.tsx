@@ -1,8 +1,10 @@
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Mic, MicOff, Send, ShieldCheck, Sparkles, Volume2, VolumeX } from "lucide-react";
+import { Mic, MicOff, RotateCcw, Send, ShieldCheck, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { askAssistant } from "@/lib/assistant.functions";
 import { PageHeader } from "@/components/PageHeader";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
 import { isSpeechOutputSupported, isVoiceInputSupported, speak, startListening, stopSpeaking } from "@/lib/voice";
 
@@ -36,6 +38,7 @@ export function AgentChat({
   const [listening, setListening] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [canRetry, setCanRetry] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const stopRef = useRef<(() => void) | null>(null);
 
@@ -63,26 +66,45 @@ export function AgentChat({
     if (last) { speak(last.content, lang); setSpeaking(true); }
   }
 
-  async function send(text: string) {
-    const trimmed = text.trim();
-    if (!trimmed || loading) return;
+  function formatError(message: string) {
+    return message.startsWith("RATE_LIMIT:") ? message.slice("RATE_LIMIT:".length) : message;
+  }
+
+  async function requestReply(thread: Msg[]) {
     setError(null);
-    const next: Msg[] = [...messages, { role: "user", content: trimmed }];
-    setMessages(next);
-    setInput("");
+    setCanRetry(false);
     setLoading(true);
     try {
-      const { reply } = await ask({ data: { persona, lang, messages: next } });
-      setMessages([...next, { role: "assistant", content: reply }]);
-      if (autoSpeak && voiceOut) { speak(reply, lang); setSpeaking(true); }
+      const { reply } = await ask({ data: { persona, lang, messages: thread } });
+      setMessages([...thread, { role: "assistant", content: reply }]);
+      if (autoSpeak && voiceOut) {
+        speak(reply, lang);
+        setSpeaking(true);
+      }
       requestAnimationFrame(() => {
         scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
       });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
+      const raw = e instanceof Error ? e.message : "Something went wrong.";
+      setError(formatError(raw));
+      setCanRetry(true);
     } finally {
       setLoading(false);
     }
+  }
+
+  async function send(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
+    const next: Msg[] = [...messages, { role: "user", content: trimmed }];
+    setMessages(next);
+    setInput("");
+    await requestReply(next);
+  }
+
+  async function retryLast() {
+    if (loading || messages.length === 0) return;
+    await requestReply(messages);
   }
 
   return (
@@ -129,13 +151,40 @@ export function AgentChat({
         ))}
 
         {loading && (
-          <div className="mr-auto rounded-2xl rounded-bl-md border border-border bg-surface px-3.5 py-2.5 text-sm text-muted-foreground">
-            Thinking…
+          <div
+            className="mr-auto max-w-[90%] space-y-2 rounded-2xl rounded-bl-md border border-border bg-surface px-3.5 py-2.5"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <Skeleton className="h-3 w-4/5" />
+            <Skeleton className="h-3 w-3/5" />
+            <Skeleton className="h-3 w-2/5" />
           </div>
         )}
         {error && (
           <div className="rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
-            {error}
+            <p>{error}</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              {canRetry && (
+                <button
+                  type="button"
+                  onClick={retryLast}
+                  disabled={loading}
+                  className="tap inline-flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-1 text-[11px] font-medium text-destructive"
+                >
+                  <RotateCcw className="size-3" aria-hidden="true" />
+                  Try again
+                </button>
+              )}
+              {error.includes("Sign in") && (
+                <Link
+                  to="/auth"
+                  className="rounded-md bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground"
+                >
+                  Sign in
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>

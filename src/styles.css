@@ -91,6 +91,17 @@
   --gradient-ke: linear-gradient(135deg, #000000 0%, #990000 55%, #006600 100%);
   --gradient-ke-soft: linear-gradient(135deg, rgb(0 0 0 / 0.92), rgb(153 0 0 / 0.92) 55%, rgb(0 102 0 / 0.92));
   --gradient-red-green: linear-gradient(90deg, #990000, #006600);
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --text-xs: 0.6875rem;
+  --text-sm: 0.875rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
 }
 
 .dark {

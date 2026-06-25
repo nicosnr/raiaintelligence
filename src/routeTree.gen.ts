@@ -10,18 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VotingRouteImport } from './routes/voting'
+import { Route as TermsOfServiceRouteImport } from './routes/terms-of-service'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RepresentativesRouteImport } from './routes/representatives'
 import { Route as ReelsRouteImport } from './routes/reels'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PostsRouteImport } from './routes/posts'
 import { Route as PollsRouteImport } from './routes/polls'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as LearnRouteImport } from './routes/learn'
+import { Route as IpNoticeRouteImport } from './routes/ip-notice'
 import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as EconomyRouteImport } from './routes/economy'
+import { Route as DataComplianceRouteImport } from './routes/data-compliance'
 import { Route as CountiesRouteImport } from './routes/counties'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -35,6 +39,11 @@ import { Route as AgentsCivicgovRouteImport } from './routes/agents.civicgov'
 const VotingRoute = VotingRouteImport.update({
   id: '/voting',
   path: '/voting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsOfServiceRoute = TermsOfServiceRouteImport.update({
+  id: '/terms-of-service',
+  path: '/terms-of-service',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -62,6 +71,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PostsRoute = PostsRouteImport.update({
   id: '/posts',
   path: '/posts',
@@ -87,6 +101,11 @@ const LearnRoute = LearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IpNoticeRoute = IpNoticeRouteImport.update({
+  id: '/ip-notice',
+  path: '/ip-notice',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GlossaryRoute = GlossaryRouteImport.update({
   id: '/glossary',
   path: '/glossary',
@@ -95,6 +114,11 @@ const GlossaryRoute = GlossaryRouteImport.update({
 const EconomyRoute = EconomyRouteImport.update({
   id: '/economy',
   path: '/economy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataComplianceRoute = DataComplianceRouteImport.update({
+  id: '/data-compliance',
+  path: '/data-compliance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CountiesRoute = CountiesRouteImport.update({
@@ -149,18 +173,22 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/counties': typeof CountiesRoute
+  '/data-compliance': typeof DataComplianceRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
+  '/ip-notice': typeof IpNoticeRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
   '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
@@ -173,18 +201,22 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/counties': typeof CountiesRoute
+  '/data-compliance': typeof DataComplianceRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
+  '/ip-notice': typeof IpNoticeRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
   '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
@@ -198,18 +230,22 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
   '/counties': typeof CountiesRoute
+  '/data-compliance': typeof DataComplianceRoute
   '/economy': typeof EconomyRoute
   '/glossary': typeof GlossaryRoute
+  '/ip-notice': typeof IpNoticeRoute
   '/learn': typeof LearnRouteWithChildren
   '/news': typeof NewsRoute
   '/onboarding': typeof OnboardingRoute
   '/polls': typeof PollsRoute
   '/posts': typeof PostsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
   '/representatives': typeof RepresentativesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/terms-of-service': typeof TermsOfServiceRoute
   '/voting': typeof VotingRoute
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
@@ -224,18 +260,22 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/counties'
+    | '/data-compliance'
     | '/economy'
     | '/glossary'
+    | '/ip-notice'
     | '/learn'
     | '/news'
     | '/onboarding'
     | '/polls'
     | '/posts'
+    | '/privacy-policy'
     | '/profile'
     | '/reels'
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/terms-of-service'
     | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
@@ -248,18 +288,22 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/counties'
+    | '/data-compliance'
     | '/economy'
     | '/glossary'
+    | '/ip-notice'
     | '/learn'
     | '/news'
     | '/onboarding'
     | '/polls'
     | '/posts'
+    | '/privacy-policy'
     | '/profile'
     | '/reels'
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/terms-of-service'
     | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
@@ -272,18 +316,22 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendar'
     | '/counties'
+    | '/data-compliance'
     | '/economy'
     | '/glossary'
+    | '/ip-notice'
     | '/learn'
     | '/news'
     | '/onboarding'
     | '/polls'
     | '/posts'
+    | '/privacy-policy'
     | '/profile'
     | '/reels'
     | '/representatives'
     | '/services'
     | '/settings'
+    | '/terms-of-service'
     | '/voting'
     | '/agents/civicgov'
     | '/agents/justice'
@@ -297,18 +345,22 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
   CountiesRoute: typeof CountiesRoute
+  DataComplianceRoute: typeof DataComplianceRoute
   EconomyRoute: typeof EconomyRoute
   GlossaryRoute: typeof GlossaryRoute
+  IpNoticeRoute: typeof IpNoticeRoute
   LearnRoute: typeof LearnRouteWithChildren
   NewsRoute: typeof NewsRoute
   OnboardingRoute: typeof OnboardingRoute
   PollsRoute: typeof PollsRoute
   PostsRoute: typeof PostsRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ProfileRoute: typeof ProfileRoute
   ReelsRoute: typeof ReelsRoute
   RepresentativesRoute: typeof RepresentativesRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
+  TermsOfServiceRoute: typeof TermsOfServiceRoute
   VotingRoute: typeof VotingRoute
   AgentsCivicgovRoute: typeof AgentsCivicgovRoute
   AgentsJusticeRoute: typeof AgentsJusticeRoute
@@ -322,6 +374,13 @@ declare module '@tanstack/react-router' {
       path: '/voting'
       fullPath: '/voting'
       preLoaderRoute: typeof VotingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms-of-service': {
+      id: '/terms-of-service'
+      path: '/terms-of-service'
+      fullPath: '/terms-of-service'
+      preLoaderRoute: typeof TermsOfServiceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -359,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/posts': {
       id: '/posts'
       path: '/posts'
@@ -394,6 +460,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ip-notice': {
+      id: '/ip-notice'
+      path: '/ip-notice'
+      fullPath: '/ip-notice'
+      preLoaderRoute: typeof IpNoticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/glossary': {
       id: '/glossary'
       path: '/glossary'
@@ -406,6 +479,13 @@ declare module '@tanstack/react-router' {
       path: '/economy'
       fullPath: '/economy'
       preLoaderRoute: typeof EconomyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data-compliance': {
+      id: '/data-compliance'
+      path: '/data-compliance'
+      fullPath: '/data-compliance'
+      preLoaderRoute: typeof DataComplianceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/counties': {
@@ -490,18 +570,22 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
   CountiesRoute: CountiesRoute,
+  DataComplianceRoute: DataComplianceRoute,
   EconomyRoute: EconomyRoute,
   GlossaryRoute: GlossaryRoute,
+  IpNoticeRoute: IpNoticeRoute,
   LearnRoute: LearnRouteWithChildren,
   NewsRoute: NewsRoute,
   OnboardingRoute: OnboardingRoute,
   PollsRoute: PollsRoute,
   PostsRoute: PostsRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   ProfileRoute: ProfileRoute,
   ReelsRoute: ReelsRoute,
   RepresentativesRoute: RepresentativesRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
+  TermsOfServiceRoute: TermsOfServiceRoute,
   VotingRoute: VotingRoute,
   AgentsCivicgovRoute: AgentsCivicgovRoute,
   AgentsJusticeRoute: AgentsJusticeRoute,
@@ -510,3 +594,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

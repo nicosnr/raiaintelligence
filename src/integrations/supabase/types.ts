@@ -14,6 +14,156 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage: {
+        Row: {
+          daily_count: number
+          id: string
+          reset_at: string
+          session_hash: string | null
+          user_id: string | null
+        }
+        Insert: {
+          daily_count?: number
+          id?: string
+          reset_at?: string
+          session_hash?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          daily_count?: number
+          id?: string
+          reset_at?: string
+          session_hash?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          locale: string | null
+          persona: string | null
+          session_hash: string
+          topic_slug: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          locale?: string | null
+          persona?: string | null
+          session_hash: string
+          topic_slug?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          locale?: string | null
+          persona?: string | null
+          session_hash?: string
+          topic_slug?: string | null
+        }
+        Relationships: []
+      }
+      bookmarks: {
+        Row: {
+          created_at: string
+          id: string
+          topic_slug: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          topic_slug: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          topic_slug?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      civic_topics: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          locale: string
+          published_at: string | null
+          sections: Json
+          slug: string
+          source: string | null
+          summary: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          locale?: string
+          published_at?: string | null
+          sections?: Json
+          slug: string
+          source?: string | null
+          summary: string
+          title: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          locale?: string
+          published_at?: string | null
+          sections?: Json
+          slug?: string
+          source?: string | null
+          summary?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      learning_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          quiz_score: number | null
+          topic_slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          quiz_score?: number | null
+          topic_slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          quiz_score?: number | null
+          topic_slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       poll_options: {
         Row: {
           created_at: string

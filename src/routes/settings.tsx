@@ -1,146 +1,90 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Moon, Sun, Bell, ShieldCheck, Languages } from "lucide-react";
-import { PageHeader } from "@/components/PageHeader";
-import { useI18n } from "@/lib/i18n";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronRight, FileText, Shield, Scale, Database } from "lucide-react";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({
-    meta: [
-      { title: "Settings — CivicIntel" },
-      { name: "description", content: "App preferences and privacy." },
-    ],
-  }),
-  component: SettingsPage,
+  component: Settings,
 });
 
-function SettingsPage() {
-  const { lang, setLang, t } = useI18n();
-  const [dark, setDark] = useState(false);
-  const [notif, setNotif] = useState(true);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("ci-theme");
-    setDark(stored === "dark");
-    setNotif(localStorage.getItem("ci-notif") !== "off");
-  }, []);
-
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("ci-theme", next ? "dark" : "light");
-  }
-
-  function toggleNotif() {
-    const next = !notif;
-    setNotif(next);
-    localStorage.setItem("ci-notif", next ? "on" : "off");
-  }
-
+function Settings() {
   return (
-    <div className="pb-24">
-      <PageHeader eyebrow="App settings" title="Preferences" description="Control the experience and data on this device." />
+    <div className="min-h-screen bg-background px-4 pb-32 pt-6">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Account</p>
+      <h1 className="font-serif text-3xl italic mt-1 mb-8">Settings</h1>
 
-      <div className="mx-4 mb-2 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
-        <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-full bg-secondary">
-            <Languages className="size-4" />
-          </span>
-          <div className="flex-1">
-            <p className="text-sm font-semibold">{t("settings.language")}</p>
-            <p className="text-[11px] text-muted-foreground">{t("settings.language.desc")}</p>
-          </div>
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {(["en", "sw"] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => setLang(l)}
-              className={
-                "tap rounded-xl border px-3 py-2 text-sm font-medium " +
-                (lang === l ? "border-transparent text-white" : "border-border bg-background")
-              }
-              style={lang === l ? { background: "var(--gradient-ke, linear-gradient(135deg,#000,#990000 60%,#006600))" } : undefined}
-              aria-pressed={lang === l}
-            >
-              {l === "en" ? "English" : "Kiswahili"}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Legal Section */}
+      <section className="mb-6">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">Legal & Compliance</p>
+        <ul className="overflow-hidden rounded-2xl border border-border bg-card divide-y divide-border">
 
-      <ul className="mx-4 space-y-2">
-        <Row
-          icon={dark ? <Moon className="size-4" /> : <Sun className="size-4" />}
-          label="Dark mode"
-          description="Switch the interface to midnight tones."
-          checked={dark}
-          onChange={toggleDark}
-        />
-        <Row
-          icon={<Bell className="size-4" />}
-          label="In-app notifications"
-          description="Civic alerts and new explainers (this device only)."
-          checked={notif}
-          onChange={toggleNotif}
-        />
-      </ul>
+          <li>
+            <Link to="/privacy-policy" className="flex items-center gap-3 px-4 py-3.5 active:bg-secondary/60">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{ background: "linear-gradient(135deg,#000,#990000 60%,#006600)" }}>
+                <Shield className="size-4" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-[14px] font-semibold leading-tight">Privacy Policy</span>
+                <span className="block text-[11.5px] text-muted-foreground">How we handle your data</span>
+              </span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          </li>
 
-      <div className="mx-4 mt-6 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <ShieldCheck className="size-4 text-[color:var(--ke-red)]" /> Our promise
+          <li>
+            <Link to="/terms-of-service" className="flex items-center gap-3 px-4 py-3.5 active:bg-secondary/60">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{ background: "linear-gradient(135deg,#000,#990000 60%,#006600)" }}>
+                <FileText className="size-4" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-[14px] font-semibold leading-tight">Terms of Service</span>
+                <span className="block text-[11.5px] text-muted-foreground">Rules for using CivicIntel</span>
+              </span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/ip-notice" className="flex items-center gap-3 px-4 py-3.5 active:bg-secondary/60">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{ background: "linear-gradient(135deg,#000,#990000 60%,#006600)" }}>
+                <Scale className="size-4" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-[14px] font-semibold leading-tight">IP & Copyright Notice</span>
+                <span className="block text-[11.5px] text-muted-foreground">Ownership and content rights</span>
+              </span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          </li>
+
+          <li>
+            <Link to="/data-compliance" className="flex items-center gap-3 px-4 py-3.5 active:bg-secondary/60">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{ background: "linear-gradient(135deg,#000,#990000 60%,#006600)" }}>
+                <Database className="size-4" />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-[14px] font-semibold leading-tight">Data & Compliance</span>
+                <span className="block text-[11.5px] text-muted-foreground">Kenya DPA 2019 compliance</span>
+              </span>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </Link>
+          </li>
+
+        </ul>
+      </section>
+
+      {/* About */}
+      <section className="mb-6">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-1">About</p>
+        <div className="overflow-hidden rounded-2xl border border-border bg-card px-4 py-3.5">
+          <p className="text-[14px] font-semibold">CivicIntel</p>
+          <p className="text-[11.5px] text-muted-foreground mt-0.5">Version 1.0.0</p>
+          <p className="text-[11.5px] text-muted-foreground mt-2">Educational only — never legal advice or political commentary.</p>
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-foreground/85 not-italic">
-          CivicIntel is neutral and non-partisan. We do not host public comments, leader ratings, or
-          political endorsements. Polls collect anonymous tallies only and are reviewed for neutrality.
-        </p>
-      </div>
+      </section>
+
     </div>
-  );
-}
-
-function Row({
-  icon,
-  label,
-  description,
-  checked,
-  onChange,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  checked: boolean;
-  onChange: () => void;
-}) {
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={onChange}
-        className="tap flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 text-left"
-      >
-        <span className="flex size-9 items-center justify-center rounded-full bg-secondary">{icon}</span>
-        <div className="flex-1">
-          <p className="text-sm font-semibold">{label}</p>
-          <p className="text-[11px] text-muted-foreground">{description}</p>
-        </div>
-        <span
-          className={
-            "relative h-6 w-10 rounded-full transition-colors " +
-            (checked ? "" : "bg-secondary")
-          }
-          style={checked ? { background: "var(--gradient-ke)" } : undefined}
-          aria-hidden="true"
-        >
-          <span
-            className={
-              "absolute top-0.5 size-5 rounded-full bg-white shadow transition-transform " +
-              (checked ? "translate-x-4" : "translate-x-0.5")
-            }
-          />
-        </span>
-      </button>
-    </li>
   );
 }
