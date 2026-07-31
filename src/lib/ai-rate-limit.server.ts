@@ -4,6 +4,26 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 const AUTH_DAILY_LIMIT = 50;
 const ANON_DAILY_LIMIT = 5;
 
+// SUPABASE_SERVICE_ROLE_KEY is required for both rate limiting and analytics
+// logging, since ai_usage/analytics_events intentionally grant no access to
+// the anon/authenticated roles (see supabase/migrations — the party being
+// rate-limited must not be able to read or reset its own counter). When the
+// key isn't available (e.g. the Supabase project is owned by another
+// account and the dashboard is inaccessible), skip both features instead of
+// failing the request — the assistant itself doesn't depend on either.
+// This is read once per server instance/cold start; setting the env var and
+// redeploying re-enables everything below automatically, no code changes.
+const SERVICE_ROLE_AVAILABLE = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!SERVICE_ROLE_AVAILABLE) {
+  console.warn(
+    "[ai-rate-limit] SUPABASE_SERVICE_ROLE_KEY is not set — assistant rate " +
+      "limiting and usage-analytics logging are DISABLED. The assistant will " +
+      "still respond, but daily quotas are not enforced and queries are not " +
+      "logged. Set SUPABASE_SERVICE_ROLE_KEY to restore this automatically.",
+  );
+}
+
 function todayUtc(): string {
   return new Date().toISOString().slice(0, 10);
 }
@@ -14,6 +34,8 @@ export function hashSessionKey(userId: string | null, ip: string): string {
 }
 
 export async function assertAiRateLimit(userId: string | null, ip: string): Promise<void> {
+  if (!SERVICE_ROLE_AVAILABLE) return;
+
   const limit = userId ? AUTH_DAILY_LIMIT : ANON_DAILY_LIMIT;
   const today = todayUtc();
 
@@ -114,6 +136,8 @@ export async function logAssistantQuery(opts: {
   persona: string;
   locale: string;
 }): Promise<void> {
+  if (!SERVICE_ROLE_AVAILABLE) return;
+
   try {
     await supabaseAdmin.from("analytics_events").insert({
       event_type: "assistant_query",
