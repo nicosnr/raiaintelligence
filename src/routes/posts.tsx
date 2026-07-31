@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Heart, MessageCircle, Share2, Bookmark, ChevronDown, ChevronUp, Clock } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { POSTS, type Post, type Category, timeAgo, formatCount } from "@/lib/feed-content";
+import { shareContent } from "@/lib/utils";
 
 export const Route = createFileRoute("/posts")({
   head: () => ({
@@ -134,7 +135,11 @@ function PostCard({ post }: { post: Post }) {
             label={formatCount(likes)}
           />
           <IconBtn icon={<MessageCircle className="size-[18px]" />} label={formatCount(post.comments)} />
-          <IconBtn icon={<Share2 className="size-[18px]" />} label="Share" />
+          <IconBtn
+            icon={<Share2 className="size-[18px]" />}
+            label="Share"
+            onClick={() => shareContent({ title: post.title, text: post.summary })}
+          />
         </div>
         <IconBtn
           onClick={() => setSaved((v) => !v)}

@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import {
   Heart, MessageCircle, Bookmark, Volume2, VolumeX, Play,
-  Search, Plus, Bell, ChevronDown, MoreHorizontal, Music2, BadgeCheck,
+  Search, Bell, ChevronDown, Share2, Music2, BadgeCheck,
 } from "lucide-react";
 import { REELS, type Reel, type Category, timeAgo, formatCount } from "@/lib/feed-content";
+import { shareContent } from "@/lib/utils";
 import { StoriesRail } from "@/components/StoriesRail";
 
 export const Route = createFileRoute("/reels")({
@@ -30,9 +31,9 @@ function ReelsPage() {
       {/* Top bar — Instagram-style */}
       <header className="pointer-events-none absolute inset-x-0 top-0 z-30">
         <div className="pointer-events-auto flex items-center justify-between px-4 pt-4">
-          <button type="button" aria-label="Search" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+          <Link to="/glossary" aria-label="Search" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
             <Search className="size-4" />
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => setTab((t) => (t === "Reels" ? "Stories" : "Reels"))}
@@ -42,18 +43,15 @@ function ReelsPage() {
             <ChevronDown className="size-4" />
           </button>
           <div className="flex items-center gap-2">
-            <button type="button" aria-label="New" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
-              <Plus className="size-4" />
-            </button>
-            <button type="button" aria-label="Notifications" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
+            <Link to="/calendar" aria-label="Notifications" className="tap flex size-9 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur">
               <Bell className="size-4" />
-            </button>
+            </Link>
           </div>
         </div>
 
         {/* Stories rail */}
         <div className="pointer-events-auto bg-gradient-to-b from-black/65 to-transparent">
-          <StoriesRail />
+          <StoriesRail onSelect={setFilter} />
         </div>
 
         {/* Filter pills */}
@@ -177,7 +175,14 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
           >
             {following ? "Following" : "Follow"}
           </button>
-          <button aria-label="More" className="tap text-white"><MoreHorizontal className="size-5" /></button>
+          <button
+            type="button"
+            aria-label="Share"
+            className="tap text-white"
+            onClick={() => shareContent({ title: reel.title, text: reel.caption })}
+          >
+            <Share2 className="size-5" />
+          </button>
         </div>
 
         {/* Inline action stats */}

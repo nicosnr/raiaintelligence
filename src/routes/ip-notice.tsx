@@ -45,7 +45,20 @@ function IPNotice() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-base mb-2">6. Copyright Takedown / DMCA</h2>
+          <h2 className="font-semibold text-base mb-2">6. Photography Credits</h2>
+          <p>Building and civic photography used in the app is sourced from Wikimedia Commons under Creative Commons or public domain licences:</p>
+          <ul className="space-y-2 list-disc pl-4 mt-2">
+            <li>Parliament Buildings, Nairobi — Jorge Láscar, CC BY-SA 2.0</li>
+            <li>Nairobi City Hall — Jorge Láscar, CC BY-SA 2.0</li>
+            <li>Supreme Court of Kenya — Francis Akuka / Wikimedia Foundation, CC0</li>
+            <li>Central Bank of Kenya — Sidhanta Khuntia, CC BY-SA 4.0</li>
+            <li>Times Tower, Nairobi (Kenya Revenue Authority) — Ruslik0, CC BY-SA 4.0</li>
+            <li>Ballot box — Smithsonian Institution, public domain</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="font-semibold text-base mb-2">7. Copyright Takedown / DMCA</h2>
           <p>If you believe that content on CivicIntel infringes your copyright, please contact us with the following information:</p>
           <ul className="space-y-2 list-disc pl-4 mt-2">
             <li>A description of the copyrighted work you believe has been infringed.</li>
@@ -57,7 +70,7 @@ function IPNotice() {
         </section>
 
         <section>
-          <h2 className="font-semibold text-base mb-2">7. Contact</h2>
+          <h2 className="font-semibold text-base mb-2">8. Contact</h2>
           <p>Email: <strong>civicintel.ke@gmail.com</strong></p>
           <p className="mt-1">Nairobi, Kenya</p>
         </section>

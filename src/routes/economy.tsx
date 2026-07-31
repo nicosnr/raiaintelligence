@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   ArrowLeftRight, TrendingUp, Fuel, Sprout, BarChart3,
-  Send, Download, Plus, MoreHorizontal, Bell, Sparkles,
+  BookOpen, MapPin, Bell, Sparkles,
   ArrowDownLeft, ArrowUpRight, Wallet, Eye, EyeOff,
 } from "lucide-react";
 import {
@@ -52,12 +52,12 @@ function EconomyPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button aria-label="AI insights" className="tap flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur ring-1 ring-white/15">
+            <Link to="/assistant" aria-label="AI insights" className="tap flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur ring-1 ring-white/15">
               <Sparkles className="size-4" />
-            </button>
-            <button aria-label="Notifications" className="tap flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur ring-1 ring-white/15">
+            </Link>
+            <Link to="/calendar" aria-label="Notifications" className="tap flex size-9 items-center justify-center rounded-full bg-white/10 backdrop-blur ring-1 ring-white/15">
               <Bell className="size-4" />
-            </button>
+            </Link>
           </div>
         </header>
 
@@ -76,12 +76,11 @@ function EconomyPage() {
           </p>
         </div>
 
-        {/* Quick action pills */}
-        <div className="relative mt-5 grid grid-cols-4 gap-2">
-          <QuickAction icon={<Send className="size-4" />} label="Send" />
-          <QuickAction icon={<Download className="size-4" />} label="Request" />
-          <QuickAction icon={<Plus className="size-4" />} label="Add funds" />
-          <QuickAction icon={<MoreHorizontal className="size-4" />} label="More" />
+        {/* Quick action pills — these figures are illustrative only, so actions
+            point to real civic-finance content rather than any money movement. */}
+        <div className="relative mt-5 grid grid-cols-2 gap-2">
+          <QuickAction icon={<BookOpen className="size-4" />} label="Learn public finance" to="/learn" />
+          <QuickAction icon={<MapPin className="size-4" />} label="County allocations" to="/counties" />
         </div>
       </section>
 
@@ -98,12 +97,12 @@ function EconomyPage() {
           <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Civic literacy</p>
           <p className="mt-1 font-serif text-base italic leading-tight">Where do your taxes go?</p>
           <p className="mt-1 text-[11px] text-muted-foreground">A 2-minute explainer of the budget cycle.</p>
-          <button className="tap mt-2 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background">Learn now</button>
+          <Link to="/learn" className="tap mt-2 inline-block rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background">Learn now</Link>
         </div>
       </section>
 
       {/* Transactions */}
-      <Section icon={<ArrowLeftRight className="size-4" />} title="Transactions" subtitle="View all">
+      <Section icon={<ArrowLeftRight className="size-4" />} title="Transactions">
         <ul
           className="mx-4 divide-y divide-white/5 overflow-hidden rounded-2xl text-white"
           style={{ background: "linear-gradient(160deg,#0e0e12 0%,#16101a 100%)", boxShadow: "var(--shadow-card)" }}
@@ -206,15 +205,15 @@ function EconomyPage() {
   );
 }
 
-function QuickAction({ icon, label }: { icon: React.ReactNode; label: string }) {
+function QuickAction({ icon, label, to }: { icon: React.ReactNode; label: string; to: "/learn" | "/counties" }) {
   return (
-    <button
-      type="button"
+    <Link
+      to={to}
       className="tap flex flex-col items-center justify-center gap-1.5 rounded-2xl bg-white/10 px-2 py-3 text-white ring-1 ring-white/15 backdrop-blur"
     >
       <span className="flex size-8 items-center justify-center rounded-full bg-white/15">{icon}</span>
       <span className="text-[11px] font-medium">{label}</span>
-    </button>
+    </Link>
   );
 }
 

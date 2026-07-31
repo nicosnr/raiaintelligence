@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { STORIES } from "@/lib/stories";
+import type { Category } from "@/lib/feed-content";
 
-export function StoriesRail() {
+export function StoriesRail({ onSelect }: { onSelect?: (category: Category | "All") => void }) {
+  const [viewed, setViewed] = useState<Record<string, boolean>>({});
+
   return (
     <div className="px-3 pt-2 pb-3">
       <div className="flex items-center justify-between px-1 pb-2">
@@ -10,12 +14,21 @@ export function StoriesRail() {
       </div>
       <div className="flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STORIES.map((s, i) => (
-          <button key={s.id} type="button" className="tap shrink-0 flex flex-col items-center gap-1.5 w-[64px]">
+          <button
+            key={s.id}
+            type="button"
+            aria-label={`${s.name} — ${s.role}`}
+            onClick={() => {
+              setViewed((v) => ({ ...v, [s.id]: true }));
+              onSelect?.(s.category);
+            }}
+            className="tap shrink-0 flex flex-col items-center gap-1.5 w-[64px]"
+          >
             <span className="relative block">
               <span
                 className={
                   "block rounded-full p-[2px] " +
-                  (s.unread
+                  (s.unread && !viewed[s.id]
                     ? "bg-[conic-gradient(from_140deg,#990000,#006600,#000,#990000)]"
                     : "bg-white/15")
                 }

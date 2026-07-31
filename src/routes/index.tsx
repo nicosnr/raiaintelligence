@@ -6,7 +6,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { topics } from "@/lib/civic-content";
-import jamhuriBg from "@/assets/jamhuri-bg.jpg.asset.json";
+import { getTopicImage, getCategoryImage } from "@/lib/topic-images";
+import { useMoreSheet } from "./__root";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,15 +38,17 @@ const SERVICES = [
 ] as const;
 
 const EVENTS = [
-  { tag: "Live", title: "National Assembly: Public Finance debate", when: "Today · 2:30 PM" },
-  { tag: "Hearing", title: "Senate County Allocation hearings", when: "Tomorrow · 10:00 AM" },
-  { tag: "Deadline", title: "KRA monthly VAT filing deadline", when: "20 Jun · End of day" },
+  { tag: "Live", title: "National Assembly: Public Finance debate", when: "Today · 2:30 PM", category: "budget" },
+  { tag: "Hearing", title: "Senate County Allocation hearings", when: "Tomorrow · 10:00 AM", category: "devolution" },
+  { tag: "Deadline", title: "KRA monthly VAT filing deadline", when: "20 Jun · End of day", category: "tax" },
 ] as const;
 
 function Index() {
   const [active, setActive] = useState<(typeof CATEGORIES)[number]>("For you");
+  const { open: openMore } = useMoreSheet();
   const featured = topics[0];
   const rest = topics.slice(1, 4);
+  const featuredImage = getTopicImage(featured.slug);
 
   return (
     <div className="flex flex-col bg-background pb-28">
@@ -68,10 +71,10 @@ function Index() {
           <Link to="/glossary" aria-label="Search" className="tap flex size-10 items-center justify-center rounded-full border border-border bg-card">
             <Search className="size-[18px]" />
           </Link>
-          <button aria-label="Notifications" className="tap relative flex size-10 items-center justify-center rounded-full border border-border bg-card">
+          <Link to="/calendar" aria-label="Notifications" className="tap relative flex size-10 items-center justify-center rounded-full border border-border bg-card">
             <Bell className="size-[18px]" />
             <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[color:var(--ke-red,#990000)]" />
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -131,7 +134,7 @@ function Index() {
       <section className="mt-6 px-5">
         <div className="flex items-center justify-between">
           <h2 className="text-[15px] font-semibold">Services</h2>
-          <button onClick={() => {}} className="text-xs font-medium text-muted-foreground">See all</button>
+          <button onClick={openMore} className="text-xs font-medium text-muted-foreground">See all</button>
         </div>
         <div className="mt-3 -mx-5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ul className="flex gap-2">
@@ -179,7 +182,9 @@ function Index() {
         </div>
         <div className="mt-3 -mx-5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <ul className="flex gap-3">
-            {EVENTS.map((e) => (
+            {EVENTS.map((e) => {
+              const img = getCategoryImage(e.category);
+              return (
               <li key={e.title} className="w-[230px] shrink-0">
                 <Link
                   to="/calendar"
@@ -187,9 +192,11 @@ function Index() {
                   style={{ boxShadow: "var(--shadow-card)" }}
                 >
                   <div
+                    role="img"
+                    aria-label={img.alt}
                     className="relative aspect-[16/10] w-full"
                     style={{
-                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%), url(${jamhuriBg.url})`,
+                      backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.7) 100%), url(${img.src})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}
@@ -204,7 +211,8 @@ function Index() {
                   </div>
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </div>
       </section>
@@ -222,9 +230,11 @@ function Index() {
           style={{ boxShadow: "var(--shadow-card)" }}
         >
           <div
+            role="img"
+            aria-label={featuredImage.alt}
             className="relative aspect-[16/10] w-full"
             style={{
-              backgroundImage: `linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75) 100%), url(${jamhuriBg.url})`,
+              backgroundImage: `linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75) 100%), url(${featuredImage.src})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

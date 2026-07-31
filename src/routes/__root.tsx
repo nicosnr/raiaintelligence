@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   Home, BookOpen, MessagesSquare, Landmark, Search, Play, LayoutGrid,
   MoreHorizontal, X, TrendingUp, Newspaper, CalendarDays, MapPin,
@@ -20,6 +20,15 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { LanguageProvider } from "../lib/i18n";
+
+const MoreSheetContext = createContext<{ open: () => void } | null>(null);
+
+/** Opens the same "Explore" sheet the bottom nav's More button uses. */
+export function useMoreSheet() {
+  const ctx = useContext(MoreSheetContext);
+  if (!ctx) throw new Error("useMoreSheet must be used within the app root");
+  return ctx;
+}
 
 function NotFoundComponent() {
   return (
@@ -292,6 +301,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
+        <MoreSheetContext.Provider value={{ open: () => setMoreOpen(true) }}>
         <div className="app-frame flex flex-col">
           {!isImmersive && <ThemeToggle />}
           <main key={pathname} className="flex-1 animate-fade-up pb-2">
@@ -314,6 +324,7 @@ function RootComponent() {
           {pathname !== "/onboarding" && <BottomNav onOpenMore={() => setMoreOpen(true)} />}
           <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
         </div>
+        </MoreSheetContext.Provider>
       </LanguageProvider>
     </QueryClientProvider>
   );
