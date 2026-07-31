@@ -23,7 +23,23 @@ export async function resolveUserIdFromRequest(request: Request): Promise<string
 }
 
 export function getClientIpFromRequest(request: Request): string {
+  // Prefer headers set by trusted edge infrastructure — these are overwritten
+  // by the proxy at the edge and cannot be spoofed by the caller, unlike
+  // x-forwarded-for, whose leftmost value is client-supplied and lets anyone
+  // defeat IP-based rate limiting by sending a different value per request.
+  const cfIp = request.headers.get("cf-connecting-ip");
+  if (cfIp) return cfIp.trim();
+
+  const realIp = request.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
+
+  // Fall back to the rightmost hop in x-forwarded-for — the one appended by
+  // the proxy closest to this server — never the client-supplied leftmost one.
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
-  return request.headers.get("cf-connecting-ip") ?? request.headers.get("x-real-ip") ?? "unknown";
+  if (forwarded) {
+    const hops = forwarded.split(",").map((h) => h.trim()).filter(Boolean);
+    if (hops.length) return hops[hops.length - 1];
+  }
+
+  return "unknown";
 }
