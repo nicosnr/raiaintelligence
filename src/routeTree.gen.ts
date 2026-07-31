@@ -32,6 +32,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
+import { Route as ApiAssistantRouteImport } from './routes/api.assistant'
 import { Route as AgentsSentinelRouteImport } from './routes/agents.sentinel'
 import { Route as AgentsJusticeRouteImport } from './routes/agents.justice'
 import { Route as AgentsCivicgovRouteImport } from './routes/agents.civicgov'
@@ -151,6 +152,11 @@ const LearnSlugRoute = LearnSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => LearnRoute,
 } as any)
+const ApiAssistantRoute = ApiAssistantRouteImport.update({
+  id: '/api/assistant',
+  path: '/api/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgentsSentinelRoute = AgentsSentinelRouteImport.update({
   id: '/agents/sentinel',
   path: '/agents/sentinel',
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRoutesByTo {
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRoutesById {
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/agents/civicgov': typeof AgentsCivicgovRoute
   '/agents/justice': typeof AgentsJusticeRoute
   '/agents/sentinel': typeof AgentsSentinelRoute
+  '/api/assistant': typeof ApiAssistantRoute
   '/learn/$slug': typeof LearnSlugRoute
 }
 export interface FileRouteTypes {
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
+    | '/api/assistant'
     | '/learn/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
+    | '/api/assistant'
     | '/learn/$slug'
   id:
     | '__root__'
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | '/agents/civicgov'
     | '/agents/justice'
     | '/agents/sentinel'
+    | '/api/assistant'
     | '/learn/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -365,6 +377,7 @@ export interface RootRouteChildren {
   AgentsCivicgovRoute: typeof AgentsCivicgovRoute
   AgentsJusticeRoute: typeof AgentsJusticeRoute
   AgentsSentinelRoute: typeof AgentsSentinelRoute
+  ApiAssistantRoute: typeof ApiAssistantRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -530,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnSlugRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/api/assistant': {
+      id: '/api/assistant'
+      path: '/api/assistant'
+      fullPath: '/api/assistant'
+      preLoaderRoute: typeof ApiAssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agents/sentinel': {
       id: '/agents/sentinel'
       path: '/agents/sentinel'
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgentsCivicgovRoute: AgentsCivicgovRoute,
   AgentsJusticeRoute: AgentsJusticeRoute,
   AgentsSentinelRoute: AgentsSentinelRoute,
+  ApiAssistantRoute: ApiAssistantRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

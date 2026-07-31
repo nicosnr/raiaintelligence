@@ -1,0 +1,5 @@
+- [x] Update `gradle-wrapper.properties` to Gradle 9.6.1 and add checksum
+- [x] Update top-level `build.gradle` (google-services, task syntax, buildDir)
+- [x] Fix `proguard-android.txt` deprecation in `app/build.gradle`
+- [x] Perform Gradle Sync and verify success
+- [x] Run `clean` task to verify build script changes

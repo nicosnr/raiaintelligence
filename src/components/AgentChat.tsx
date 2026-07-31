@@ -1,14 +1,52 @@
-import { useServerFn } from "@tanstack/react-start";
+﻿import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Mic, MicOff, RotateCcw, Send, ShieldCheck, Sparkles, Volume2, VolumeX } from "lucide-react";
-import { askAssistant } from "@/lib/assistant.functions";
 import { PageHeader } from "@/components/PageHeader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useI18n } from "@/lib/i18n";
 import { isSpeechOutputSupported, isVoiceInputSupported, speak, startListening, stopSpeaking } from "@/lib/voice";
 
 type Msg = { role: "user" | "assistant"; content: string };
+async function askAssistant(data: {
+  persona: "civic" | "sentinel" | "justice" | "civicgov";
+  lang: string;
+  messages: Msg[];
+}): Promise<{ reply: string }> {
+  const [{ Capacitor }, { supabase }, { getAssistantApiUrl }] = await Promise.all([
+    import("@capacitor/core"),
+    import("@/integrations/supabase/client"),
+    import("@/lib/api-base"),
+  ]);
+
+  if (Capacitor.isNativePlatform() && !import.meta.env.VITE_SERVER_BASE_URL) {
+    throw new Error(
+      "Mobile app is not configured. Rebuild with VITE_SERVER_BASE_URL set to your deployed CivicIntel URL.",
+    );
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData.session?.access_token;
+
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers.Authorization = `Bearer ${token}`;
+
+  const res = await fetch(getAssistantApiUrl(), {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  const json = (await res.json().catch(() => null)) as { reply?: string; error?: string } | null;
+
+  if (!res.ok) {
+    throw new Error(json?.error ?? "The assistant couldn't respond. Please try again.");
+  }
+  if (!json?.reply) {
+    throw new Error("Empty response from the assistant.");
+  }
+
+  return { reply: json.reply };
+}
 
 export type AgentChatProps = {
   persona: "civic" | "sentinel" | "justice" | "civicgov";
@@ -29,7 +67,6 @@ export function AgentChat({
   suggestions,
   accentGradient = "linear-gradient(135deg,#000 0%,#990000 55%,#006600 100%)",
 }: AgentChatProps) {
-  const ask = useServerFn(askAssistant);
   const { lang } = useI18n();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -75,7 +112,7 @@ export function AgentChat({
     setCanRetry(false);
     setLoading(true);
     try {
-      const { reply } = await ask({ data: { persona, lang, messages: thread } });
+      const { reply } = await askAssistant({ persona, lang, messages: thread });
       setMessages([...thread, { role: "assistant", content: reply }]);
       if (autoSpeak && voiceOut) {
         speak(reply, lang);
