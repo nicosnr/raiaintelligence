@@ -67,7 +67,9 @@ and similar agencies. Describe processes, documents needed, and typical timeline
 You do not promise specific outcomes or processing times.`,
 } as const;
 
-const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
+const ANTHROPIC_VERSION = "2023-06-01";
+const RETRYABLE_STATUSES = new Set([429, 502, 503, 504, 529]);
 
 async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -81,15 +83,18 @@ async function fetchCompletion(
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < 3; attempt++) {
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "x-api-key": apiKey,
+        "anthropic-version": ANTHROPIC_VERSION,
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
+        model: ANTHROPIC_MODEL,
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages,
       }),
     });
 
@@ -102,10 +107,6 @@ async function fetchCompletion(
       throw lastError;
     }
 
-    if (res.status === 402) {
-      throw new Error("AI usage limit reached. Please contact the site owner.");
-    }
-
     if (RETRYABLE_STATUSES.has(res.status) && attempt < 2) {
       await sleep(1000 * 2 ** attempt);
       continue;
@@ -113,12 +114,18 @@ async function fetchCompletion(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      console.error("AI gateway error", res.status, text);
+      console.error("Anthropic API error", res.status, text);
       throw new Error("The assistant couldn't respond. Please try again.");
     }
 
-    const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-    const reply = json.choices?.[0]?.message?.content?.trim();
+    const json = (await res.json()) as {
+      content?: { type: string; text?: string }[];
+    };
+    const reply = json.content
+      ?.filter((block) => block.type === "text")
+      .map((block) => block.text ?? "")
+      .join("")
+      .trim();
     if (!reply) throw new Error("Empty response from the assistant.");
     return reply;
   }
@@ -130,7 +137,7 @@ export async function runAssistant(
   data: AssistantInput,
   opts: { userId: string | null; ip: string },
 ): Promise<{ reply: string }> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("AI is not configured. Please contact the site owner.");
   }
