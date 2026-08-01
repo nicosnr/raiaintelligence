@@ -75,6 +75,29 @@ async function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/**
+ * The Messages API rejects consecutive same-role messages ("roles must
+ * alternate between 'user' and 'assistant'" — a 400). The client only ever
+ * appends the failed thread's messages verbatim on retry, so if a user sends
+ * a follow-up after a failed reply instead of tapping "Try again", the array
+ * can end with two consecutive "user" entries. Merge consecutive same-role
+ * messages instead of sending them as separate turns.
+ */
+function normalizeMessageRoles(
+  messages: { role: "user" | "assistant"; content: string }[],
+): { role: "user" | "assistant"; content: string }[] {
+  const merged: { role: "user" | "assistant"; content: string }[] = [];
+  for (const m of messages) {
+    const last = merged[merged.length - 1];
+    if (last && last.role === m.role) {
+      last.content = `${last.content}\n\n${m.content}`;
+    } else {
+      merged.push({ ...m });
+    }
+  }
+  return merged;
+}
+
 async function fetchCompletion(
   apiKey: string,
   systemPrompt: string,
@@ -114,7 +137,19 @@ async function fetchCompletion(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      console.error("Anthropic API error", res.status, text);
+      let parsed: { error?: { type?: string; message?: string } } | null = null;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        // body wasn't JSON — fall through and log the raw text
+      }
+      console.error(
+        "Anthropic API error",
+        res.status,
+        parsed?.error
+          ? `type=${parsed.error.type ?? "unknown"} message=${parsed.error.message ?? "(no message)"}`
+          : text || "(empty response body)",
+      );
       throw new Error("The assistant couldn't respond. Please try again.");
     }
 
@@ -162,7 +197,7 @@ export async function runAssistant(
       : "\n\nLANGUAGE: Reply in clear English unless the user writes in another language, in which case match it.";
   const systemPrompt = `${personaPrompt}\n\n${CORE_RULES}${langRule}`;
 
-  const reply = await fetchCompletion(apiKey, systemPrompt, data.messages);
+  const reply = await fetchCompletion(apiKey, systemPrompt, normalizeMessageRoles(data.messages));
 
   void logAssistantQuery({
     userId: opts.userId,
