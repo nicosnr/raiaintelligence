@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "build": "vite build",
+    "test:gemini": "node scripts/test-gemini.js",
     "ionic:build": "npm run build"
   },
   "dependencies": {

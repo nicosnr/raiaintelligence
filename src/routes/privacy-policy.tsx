@@ -52,14 +52,14 @@ function PrivacyPolicy() {
 
         <section>
           <h2 className="font-semibold text-base mb-2">5. AI Chat Privacy</h2>
-          <p>Conversations with CivicIntel AI are sent to Anthropic's API for processing. We do not store chat logs after your session ends. Please do not share personal identifying information, specific case details, or sensitive legal matters in the chat. The AI is an educational tool, not a confidential legal service.</p>
+          <p>Conversations with CivicIntel AI are processed by Google Gemini's API. We do not store chat logs after your session ends. Please do not share personal identifying information, specific case details, or sensitive legal matters in the chat. The AI is an educational tool, not a confidential legal service.</p>
         </section>
 
         <section>
           <h2 className="font-semibold text-base mb-2">6. Third-Party Services</h2>
           <ul className="space-y-2 list-disc pl-4">
             <li><strong>Supabase</strong> — database and authentication, hosted on EU servers (eu-west-1).</li>
-            <li><strong>Anthropic</strong> — AI processing for the Ask CivicIntel feature.</li>
+            <li><strong>Google Gemini</strong> — AI processing for the Ask CivicIntel feature.</li>
             <li><strong>Google</strong> — optional OAuth sign-in only.</li>
           </ul>
         </section>

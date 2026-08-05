@@ -31,7 +31,7 @@ function DataCompliance() {
 
         <section>
           <h2 className="font-semibold text-base mb-2">3. AI Data Processing</h2>
-          <p>Civic chat queries entered by users are processed by <strong>Anthropic</strong> (United States) under their commercial API data processing terms. CivicIntel does not retain or log chat content after a session ends. Anthropic's data processing practices are governed by their published privacy policy.</p>
+          <p>Civic chat queries entered by users are processed by <strong>Google Gemini</strong> under Google's commercial API terms. CivicIntel does not retain or log chat content after a session ends. Google Gemini's data processing practices are governed by Google's published privacy policy.</p>
         </section>
 
         <section>

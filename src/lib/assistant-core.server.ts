@@ -67,8 +67,6 @@ and similar agencies. Describe processes, documents needed, and typical timeline
 You do not promise specific outcomes or processing times.`,
 } as const;
 
-const ANTHROPIC_MODEL = "claude-sonnet-4-6";
-const ANTHROPIC_VERSION = "2023-06-01";
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504, 529]);
 
 async function sleep(ms: number) {
@@ -105,21 +103,36 @@ async function fetchCompletion(
 ) {
   let lastError: Error | null = null;
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": ANTHROPIC_VERSION,
+  const normalized = normalizeMessageRoles(messages);
+  const body = {
+    model: "gemini-2.0-flash",
+    temperature: 0.2,
+    max_output_tokens: 1024,
+    messages: [
+      {
+        author: "system",
+        content: [{ type: "text", text: systemPrompt }],
       },
-      body: JSON.stringify({
-        model: ANTHROPIC_MODEL,
-        max_tokens: 1024,
-        system: systemPrompt,
-        messages,
-      }),
-    });
+      ...normalized.map((message) => ({
+        author: message.role,
+        content: [{ type: "text", text: message.content }],
+      })),
+    ],
+  };
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(
+      `https://gemini.googleapis.com/v1/models/gemini-2.0-flash:generateMessage?key=${encodeURIComponent(
+        apiKey,
+      )}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      },
+    );
 
     if (res.status === 429) {
       lastError = new Error("The assistant is busy. Please try again in a moment.");
@@ -137,30 +150,44 @@ async function fetchCompletion(
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      let parsed: { error?: { type?: string; message?: string } } | null = null;
+      let parsed: { error?: { message?: string } } | null = null;
       try {
         parsed = JSON.parse(text);
       } catch {
         // body wasn't JSON — fall through and log the raw text
       }
       console.error(
-        "Anthropic API error",
+        "Gemini API error",
         res.status,
-        parsed?.error
-          ? `type=${parsed.error.type ?? "unknown"} message=${parsed.error.message ?? "(no message)"}`
-          : text || "(empty response body)",
+        parsed?.error?.message ?? (text || "(empty response body)"),
       );
       throw new Error("The assistant couldn't respond. Please try again.");
     }
 
-    const json = (await res.json()) as {
-      content?: { type: string; text?: string }[];
-    };
-    const reply = json.content
-      ?.filter((block) => block.type === "text")
-      .map((block) => block.text ?? "")
+    const json = await res.json().catch(() => null) as
+      | {
+          candidates?: {
+            content?: { type: string; text?: string }[];
+          }[];
+          output?: {
+            content?: { type: string; text?: string }[];
+          }[];
+        }
+      | null;
+
+    const reply = [
+      ...(json?.candidates ?? [])
+        .flatMap((candidate) => candidate.content ?? [])
+        .filter((block) => block.type === "text")
+        .map((block) => block.text ?? ""),
+      ...(json?.output ?? [])
+        .flatMap((candidate) => candidate.content ?? [])
+        .filter((block) => block.type === "text")
+        .map((block) => block.text ?? ""),
+    ]
       .join("")
       .trim();
+
     if (!reply) throw new Error("Empty response from the assistant.");
     return reply;
   }
@@ -172,7 +199,7 @@ export async function runAssistant(
   data: AssistantInput,
   opts: { userId: string | null; ip: string },
 ): Promise<{ reply: string }> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("AI is not configured. Please contact the site owner.");
   }
