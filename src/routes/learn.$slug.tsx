@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Bookmark, CheckCircle2 } from "lucide-react";
 import { topics } from "@/lib/civic-content";
+import { useLearningProgress } from "@/lib/useLearningProgress";
 
 export const Route = createFileRoute("/learn/$slug")({
   loader: ({ params }) => {
@@ -35,15 +36,33 @@ export const Route = createFileRoute("/learn/$slug")({
 
 function TopicPage() {
   const { topic } = Route.useLoaderData();
+  const { userId, completedSlugs, bookmarkedSlugs, markComplete, toggleBookmark } =
+    useLearningProgress();
+  const completed = completedSlugs.has(topic.slug);
+  const bookmarked = bookmarkedSlugs.has(topic.slug);
+
   return (
     <article className="bg-background pb-28">
       <header className="px-5 pt-6 pb-4">
-        <Link
-          to="/learn"
-          className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-muted-foreground not-italic"
-        >
-          <ArrowLeft className="size-3.5" aria-hidden="true" /> Back
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            to="/learn"
+            className="inline-flex items-center gap-1 text-xs font-medium uppercase tracking-wider text-muted-foreground not-italic"
+          >
+            <ArrowLeft className="size-3.5" aria-hidden="true" /> Back
+          </Link>
+          {userId && (
+            <button
+              type="button"
+              onClick={() => toggleBookmark(topic.slug)}
+              aria-label={bookmarked ? "Remove bookmark" : "Bookmark this explainer"}
+              aria-pressed={bookmarked}
+              className="tap flex size-8 items-center justify-center rounded-full border border-border bg-card"
+            >
+              <Bookmark className={"size-4 " + (bookmarked ? "fill-current text-accent" : "text-muted-foreground")} />
+            </button>
+          )}
+        </div>
         <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-accent not-italic">
           Explainer
         </p>
@@ -61,6 +80,32 @@ function TopicPage() {
             </p>
           </section>
         ))}
+
+        {userId ? (
+          <button
+            type="button"
+            onClick={() => markComplete(topic.slug)}
+            disabled={completed}
+            className={
+              "tap flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold " +
+              (completed
+                ? "border border-border bg-secondary text-muted-foreground"
+                : "text-white")
+            }
+            style={completed ? undefined : { background: "var(--gradient-ke)" }}
+          >
+            <CheckCircle2 className="size-4" />
+            {completed ? "Learned" : "Mark as learned"}
+          </button>
+        ) : (
+          <Link
+            to="/auth"
+            className="tap block rounded-2xl border border-dashed border-border p-3 text-center text-xs text-muted-foreground"
+          >
+            Sign in to track your progress across explainers
+          </Link>
+        )}
+
         <p className="rounded-2xl border border-border bg-secondary p-3 text-xs not-italic text-muted-foreground">
           Educational content only. Not legal advice.
         </p>

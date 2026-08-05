@@ -7,6 +7,7 @@ import {
 import { useState } from "react";
 import { topics } from "@/lib/civic-content";
 import { getTopicImage, getCategoryImage } from "@/lib/topic-images";
+import { useLearningProgress } from "@/lib/useLearningProgress";
 import { useMoreSheet } from "./__root";
 
 export const Route = createFileRoute("/")({
@@ -49,6 +50,14 @@ function Index() {
   const featured = topics[0];
   const rest = topics.slice(1, 4);
   const featuredImage = getTopicImage(featured.slug);
+  const { userId, displayName, total, completedCount, percent } = useLearningProgress();
+  const remaining = total - completedCount;
+  const explainerMessage =
+    total === 0
+      ? "No explainers published yet"
+      : remaining === 0
+        ? "You've completed every explainer"
+        : `You have ${remaining} explainer${remaining === 1 ? "" : "s"} left to learn`;
 
   return (
     <div className="flex flex-col bg-background pb-28">
@@ -93,16 +102,16 @@ function Index() {
           <div className="absolute -bottom-24 -left-12 h-56 w-56 rounded-full"
                style={{ background: "radial-gradient(closest-side, rgba(0,102,0,.45), transparent 70%)" }} />
 
-          <p className="relative text-[12px] text-white/85">Welcome Back</p>
-          <h1 className="relative mt-1 font-serif text-[28px] leading-tight">Mwananchi Kamau</h1>
+          <p className="relative text-[12px] text-white/85">{userId ? "Welcome Back" : "Karibu"}</p>
+          <h1 className="relative mt-1 font-serif text-[28px] leading-tight">{displayName ?? "Mwananchi"}</h1>
 
           {/* Status pill */}
           <Link
             to="/learn"
             className="relative mt-4 flex items-center gap-3 rounded-full bg-white/12 px-2 py-1.5 backdrop-blur ring-1 ring-white/20"
           >
-            <span className="flex size-7 items-center justify-center rounded-full bg-white/90 text-[11px] font-bold text-[color:var(--ke-red,#990000)]">3</span>
-            <span className="flex-1 text-[12.5px] font-medium">You have 3 new explainers ready</span>
+            <span className="flex size-7 items-center justify-center rounded-full bg-white/90 text-[11px] font-bold text-[color:var(--ke-red,#990000)]">{remaining}</span>
+            <span className="flex-1 text-[12.5px] font-medium">{explainerMessage}</span>
             <ArrowRight className="size-4 opacity-90" />
           </Link>
 
@@ -110,11 +119,11 @@ function Index() {
           <div className="relative mt-3 rounded-2xl bg-white/12 px-4 py-3 backdrop-blur ring-1 ring-white/15">
             <p className="text-[11px] uppercase tracking-wider text-white/75">Civic knowledge</p>
             <div className="mt-1 flex items-end justify-between">
-              <p className="font-serif text-2xl italic leading-none">12 topics learned</p>
-              <span className="text-[11px] text-white/80">62%</span>
+              <p className="font-serif text-2xl italic leading-none">{completedCount} topic{completedCount === 1 ? "" : "s"} learned</p>
+              <span className="text-[11px] text-white/80">{percent}%</span>
             </div>
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
-              <div className="h-full rounded-full bg-white/85" style={{ width: "62%" }} />
+              <div className="h-full rounded-full bg-white/85" style={{ width: `${percent}%` }} />
             </div>
           </div>
 

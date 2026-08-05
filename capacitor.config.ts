@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Civic Intel',
   webDir: 'dist/client',
   server: {
-    url: 'https://civicintelapp.lovable.app',
+    url: 'https://raiaintelligence.vercel.app',
     cleartext: false,
   },
   android: {
