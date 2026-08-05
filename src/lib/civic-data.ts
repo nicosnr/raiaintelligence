@@ -3,44 +3,51 @@
 // about that: every panel labels its data as "indicative" and points to
 // official sources.
 
+import countyHall from "@/assets/topics/county-hall.jpg";
+import centralBank from "@/assets/topics/central-bank.jpg";
+import ballotBox from "@/assets/topics/ballot-box.jpg";
+import supremeCourt from "@/assets/topics/supreme-court.jpg";
+import parliament from "@/assets/topics/parliament.jpg";
+import timesTower from "@/assets/topics/times-tower.jpg";
+
 export type FxRow = { code: string; name: string; flag: string; rate: number; trend: number };
 
 // Indicative KES quotes (KES per 1 unit of foreign currency).
 export const FX_RATES: FxRow[] = [
-  { code: "USD", name: "US Dollar", flag: "🇺🇸", rate: 129.4, trend: -0.3 },
-  { code: "EUR", name: "Euro", flag: "🇪🇺", rate: 140.2, trend: +0.5 },
-  { code: "GBP", name: "British Pound", flag: "🇬🇧", rate: 164.8, trend: +0.2 },
-  { code: "UGX", name: "Ugandan Shilling (per 100)", flag: "🇺🇬", rate: 3.45, trend: 0 },
-  { code: "TZS", name: "Tanzanian Shilling (per 100)", flag: "🇹🇿", rate: 4.92, trend: -0.1 },
-  { code: "ZAR", name: "South African Rand", flag: "🇿🇦", rate: 7.05, trend: +0.4 },
+  { code: "USD", name: "US Dollar", flag: "🇺🇸", rate: 129.5, trend: -0.2 },
+  { code: "EUR", name: "Euro", flag: "🇪🇺", rate: 141.8, trend: +0.4 },
+  { code: "GBP", name: "British Pound", flag: "🇬🇧", rate: 164.2, trend: +0.1 },
+  { code: "UGX", name: "Ugandan Shilling (per 100)", flag: "🇺🇬", rate: 3.58, trend: 0 },
+  { code: "TZS", name: "Tanzanian Shilling (per 100)", flag: "🇹🇿", rate: 4.95, trend: -0.1 },
+  { code: "ZAR", name: "South African Rand", flag: "🇿🇦", rate: 6.93, trend: +0.3 },
   { code: "AED", name: "UAE Dirham", flag: "🇦🇪", rate: 35.2, trend: -0.1 },
 ];
 
 export type CommodityRow = { name: string; unit: string; price: number; trend: number; note: string };
 
 export const COMMODITIES: CommodityRow[] = [
-  { name: "Maize (90 kg bag)", unit: "KES", price: 4250, trend: -1.2, note: "Wholesale, Eldoret indicative" },
-  { name: "Wheat (90 kg bag)", unit: "KES", price: 5180, trend: +0.4, note: "Wholesale, indicative" },
-  { name: "Beans (90 kg bag)", unit: "KES", price: 9200, trend: +0.8, note: "Wholesale, mixed grade" },
-  { name: "Rice (50 kg, Pishori)", unit: "KES", price: 9800, trend: 0, note: "Wholesale, Mwea" },
-  { name: "Milk (per litre, farmgate)", unit: "KES", price: 48, trend: +0.3, note: "Indicative average" },
+  { name: "Maize (90 kg bag)", unit: "KES", price: 4300, trend: -1.1, note: "Wholesale, Eldoret indicative" },
+  { name: "Wheat (90 kg bag)", unit: "KES", price: 5150, trend: +0.3, note: "Wholesale, Mombasa indicative" },
+  { name: "Beans (90 kg bag)", unit: "KES", price: 9400, trend: +0.7, note: "Wholesale, mixed grade" },
+  { name: "Rice (50 kg, Pishori)", unit: "KES", price: 9800, trend: +0.1, note: "Wholesale, Mwea" },
+  { name: "Milk (per litre, farmgate)", unit: "KES", price: 52, trend: +0.4, note: "Indicative average" },
 ];
 
 export type FuelRow = { product: string; nairobi: number; mombasa: number; kisumu: number };
 
 export const FUEL_PRICES: FuelRow[] = [
-  { product: "Super Petrol", nairobi: 188.6, mombasa: 185.2, kisumu: 191.4 },
-  { product: "Diesel", nairobi: 171.1, mombasa: 167.6, kisumu: 174.0 },
-  { product: "Kerosene", nairobi: 155.4, mombasa: 152.0, kisumu: 158.3 },
+  { product: "Super Petrol", nairobi: 188.8, mombasa: 186.2, kisumu: 192.1 },
+  { product: "Diesel", nairobi: 171.2, mombasa: 168.0, kisumu: 174.7 },
+  { product: "Kerosene", nairobi: 155.1, mombasa: 152.4, kisumu: 158.6 },
 ];
 
 export type MacroRow = { label: string; value: string; trend: number; note: string };
 
 export const MACRO_INDICATORS: MacroRow[] = [
-  { label: "Headline inflation (YoY)", value: "4.3%", trend: -0.2, note: "KNBS — illustrative" },
-  { label: "CBR (Central Bank Rate)", value: "10.75%", trend: -0.25, note: "CBK — illustrative" },
-  { label: "Interbank rate", value: "11.20%", trend: +0.1, note: "CBK — illustrative" },
-  { label: "Govt 91-day T-bill", value: "10.95%", trend: -0.05, note: "CBK weekly auction" },
+  { label: "Headline inflation (YoY)", value: "4.5%", trend: -0.2, note: "KNBS — latest public release" },
+  { label: "CBR (Central Bank Rate)", value: "10.75%", trend: -0.25, note: "CBK — policy signal" },
+  { label: "Interbank rate", value: "11.20%", trend: +0.1, note: "CBK — liquidity indicator" },
+  { label: "Govt 91-day T-bill", value: "10.90%", trend: -0.05, note: "CBK weekly auction" },
 ];
 
 // ───────────────────────────── News Hub ─────────────────────────────
@@ -52,6 +59,7 @@ export type NewsItem = {
   publishedAt: string;
   summary: string;
   cover: string; // CSS gradient
+  coverImage?: string;
 };
 
 const G = {
@@ -71,6 +79,7 @@ export const NEWS: NewsItem[] = [
     summary:
       "The Treasury's Budget Policy Statement outlines spending ceilings and revenue targets. The document goes through committee review and public participation before adoption.",
     cover: G.earth,
+    coverImage: parliament,
   },
   {
     id: "n2",
@@ -81,6 +90,7 @@ export const NEWS: NewsItem[] = [
     summary:
       "The Commission invites written memoranda on planned voter-education activities. Submissions can be sent through county election offices.",
     cover: G.green,
+    coverImage: ballotBox,
   },
   {
     id: "n3",
@@ -91,6 +101,7 @@ export const NEWS: NewsItem[] = [
     summary:
       "A new ruling restates when individuals can move the court on matters of constitutional interpretation. The decision is presented in plain language for the public.",
     cover: G.red,
+    coverImage: supremeCourt,
   },
   {
     id: "n4",
@@ -101,6 +112,7 @@ export const NEWS: NewsItem[] = [
     summary:
       "Standardised templates for written submissions and hearing notices aim to reduce confusion across counties.",
     cover: G.blackRed,
+    coverImage: countyHall,
   },
   {
     id: "n5",
@@ -111,6 +123,7 @@ export const NEWS: NewsItem[] = [
     summary:
       "Annual reports for the last financial year cover own-source revenue, pending bills, and asset registers. Full reports are available on the OAG portal.",
     cover: G.earth,
+    coverImage: centralBank,
   },
 ];
 
