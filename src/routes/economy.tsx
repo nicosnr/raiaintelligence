@@ -48,7 +48,7 @@ function EconomyPage() {
             </span>
             <div>
               <p className="text-[11px] uppercase tracking-wider text-white/60">Civic wallet</p>
-              <p className="text-[13px] font-medium">Republic of Kenya — Demo</p>
+              <p className="text-[13px] font-medium">Republic of Kenya — Indicative</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ function EconomyPage() {
             {hidden ? "KES ••••••" : "KES 3,434.80B"}
           </p>
           <p className="mt-2 text-[12px] text-white/65">
-            <span className="text-[color:var(--ke-green)]">▲ 0.42%</span> vs last month · CBK indicative
+            <span className="text-[color:var(--ke-green)]">▲ 0.42%</span> vs last month · public-market snapshot
           </p>
         </div>
 

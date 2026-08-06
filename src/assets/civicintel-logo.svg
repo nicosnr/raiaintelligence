@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CivicIntel logo">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07111f" />
+      <stop offset="50%" stop-color="#990000" />
+      <stop offset="100%" stop-color="#006600" />
+    </linearGradient>
+  </defs>
+  <rect x="40" y="40" width="432" height="432" rx="120" fill="url(#bg)" />
+  <rect x="120" y="112" width="272" height="288" rx="56" fill="#ffffff" fill-opacity="0.96" />
+  <path d="M172 172h168v52H172z" fill="#07111f" />
+  <path d="M172 232h168v52H172z" fill="#990000" />
+  <path d="M172 292h168v52H172z" fill="#006600" />
+  <path d="M248 144c24 0 44 20 44 44v16h-12v-16c0-17-14-30-32-30s-32 13-32 30v16h-12v-16c0-24 20-44 44-44Z" fill="#07111f" />
+  <path d="M216 220h64c14 0 24 11 24 24v55h-40v-43h-32v43h-40v-55c0-13 10-24 24-24Z" fill="#07111f" />
+  <path d="M214 176h74l12 22-12 22h-74l-12-22 12-22Z" fill="#f8f8f8" />
+  <path d="M224 182h54l8 14-8 14h-54l-8-14 8-14Z" fill="#f2b400" />
+  <circle cx="256" cy="256" r="92" fill="none" stroke="#ffffff" stroke-width="18" />
+  <path d="M256 196l14 36h38l-30 23 11 36-33-24-33 24 11-36-30-23h38l14-36Z" fill="#ffffff" />
+  <text x="256" y="420" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="700" fill="#ffffff">CivicIntel</text>
+</svg>

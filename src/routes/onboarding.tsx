@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { ShieldCheck, Landmark, Sparkles, ArrowRight } from "lucide-react";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ShieldCheck, Landmark, Sparkles, ArrowRight, LogIn } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -38,9 +39,29 @@ const SLIDES = [
 
 function OnboardingPage() {
   const [i, setI] = useState(0);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const slide = SLIDES[i];
   const last = i === SLIDES.length - 1;
+
+  useEffect(() => {
+    let active = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      setIsLoggedIn(Boolean(data.session));
+      setCheckingAuth(false);
+    }).catch(() => {
+      if (!active) return;
+      setIsLoggedIn(false);
+      setCheckingAuth(false);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   function done() {
     try { localStorage.setItem("ci-onboarded", "1"); } catch {}
@@ -80,14 +101,28 @@ function OnboardingPage() {
               />
             ))}
           </div>
-          <button
-            type="button"
-            onClick={() => (last ? done() : setI(i + 1))}
-            className="tap flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm font-semibold text-black"
-          >
-            {last ? "Enter CivicIntel" : "Continue"}
-            <ArrowRight className="size-4" />
-          </button>
+          <div className="mb-3 rounded-2xl border border-white/15 bg-black/15 p-3 text-sm text-white/85 backdrop-blur">
+            <p className="font-medium text-white">{isLoggedIn ? "You’re signed in and ready to continue." : "Continue as a guest or sign in to save your profile and preferences."}</p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => (last ? done() : setI(i + 1))}
+              className="tap flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm font-semibold text-black"
+            >
+              {last ? (checkingAuth ? "Preparing…" : "Enter CivicIntel") : "Continue"}
+              <ArrowRight className="size-4" />
+            </button>
+            {!isLoggedIn && (
+              <Link
+                to="/auth"
+                className="tap flex w-full items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur"
+              >
+                <LogIn className="size-4" />
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
