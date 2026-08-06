@@ -10,28 +10,26 @@ const systemPrompt = `You are CivicIntel — a neutral civic education assistant
 Answer in plain English unless the user asks for Kiswahili. Keep responses short and factual.`;
 
 const body = {
-  model: "gemini-2.0-flash",
-  temperature: 0.2,
-  max_output_tokens: 256,
-  messages: [
+  model: "models/gemini-3.1-flash-lite",
+  systemInstruction: {
+    parts: [{ text: systemPrompt }],
+  },
+  contents: [
     {
-      author: "system",
-      content: [{ type: "text", text: systemPrompt }],
-    },
-    {
-      author: "user",
-      content: [{ type: "text", text: "What is the capital of Kenya and one civic fact about it?" }],
+      role: "user",
+      parts: [{ text: "What is the capital of Kenya and one civic fact about it?" }],
     },
   ],
 };
 
 async function main() {
   const res = await fetch(
-    `https://gemini.googleapis.com/v1/models/gemini-2.0-flash:generateMessage?key=${encodeURIComponent(apiKey)}`,
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-goog-api-key": apiKey,
       },
       body: JSON.stringify(body),
     },
@@ -53,11 +51,11 @@ async function main() {
   }
 
   const candidateText = [
-    ...(json.candidates ?? []).flatMap((candidate) => candidate.content ?? []),
-    ...(json.output ?? []).flatMap((candidate) => candidate.content ?? []),
+    ...(json.candidates ?? [])
+      .flatMap((candidate) => candidate.content ?? [])
+      .flatMap((content) => content.parts ?? [])
+      .map((part) => part.text ?? ""),
   ]
-    .filter((block) => block.type === "text")
-    .map((block) => block.text ?? "")
     .join("")
     .trim();
 

@@ -105,30 +105,24 @@ async function fetchCompletion(
 
   const normalized = normalizeMessageRoles(messages);
   const body = {
-    model: "gemini-2.0-flash",
-    temperature: 0.2,
-    max_output_tokens: 1024,
-    messages: [
-      {
-        author: "system",
-        content: [{ type: "text", text: systemPrompt }],
-      },
-      ...normalized.map((message) => ({
-        author: message.role,
-        content: [{ type: "text", text: message.content }],
-      })),
-    ],
+    model: "models/gemini-3.1-flash-lite",
+    systemInstruction: {
+      parts: [{ text: systemPrompt }],
+    },
+    contents: normalized.map((message) => ({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: message.content }],
+    })),
   };
 
   for (let attempt = 0; attempt < 3; attempt++) {
     const res = await fetch(
-      `https://gemini.googleapis.com/v1/models/gemini-2.0-flash:generateMessage?key=${encodeURIComponent(
-        apiKey,
-      )}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-goog-api-key": apiKey,
         },
         body: JSON.stringify(body),
       },
@@ -167,24 +161,17 @@ async function fetchCompletion(
     const json = await res.json().catch(() => null) as
       | {
           candidates?: {
-            content?: { type: string; text?: string }[];
-          }[];
-          output?: {
-            content?: { type: string; text?: string }[];
+            content?: {
+              parts?: { text?: string }[];
+            }[];
           }[];
         }
       | null;
 
-    const reply = [
-      ...(json?.candidates ?? [])
-        .flatMap((candidate) => candidate.content ?? [])
-        .filter((block) => block.type === "text")
-        .map((block) => block.text ?? ""),
-      ...(json?.output ?? [])
-        .flatMap((candidate) => candidate.content ?? [])
-        .filter((block) => block.type === "text")
-        .map((block) => block.text ?? ""),
-    ]
+    const reply = (json?.candidates ?? [])
+      .flatMap((candidate) => candidate.content ?? [])
+      .flatMap((content) => content.parts ?? [])
+      .map((part) => part.text ?? "")
       .join("")
       .trim();
 
