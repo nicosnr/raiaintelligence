@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, ChevronRight, Flame } from "lucide-react";
+import { CheckCircle2, ChevronRight, Flame, Compass, FileText, Landmark, TrendingUp } from "lucide-react";
 import { topics } from "@/lib/civic-content";
 import { PageHeader } from "@/components/PageHeader";
 import { useLearningProgress } from "@/lib/useLearningProgress";
@@ -27,6 +27,40 @@ function LearnIndex() {
         title="Learn"
         description="Short, neutral explainers on the foundations of civic life."
       />
+      <section className="mx-5 mb-4 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Quick civic tools</p>
+        <p className="mt-1 font-serif text-lg italic">Explore laws, services and budgets in one place.</p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Link to="/assistant" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <Compass className="size-4 text-[color:var(--ke-red)]" />
+              <p className="text-[12px] font-semibold">Ask AI</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Get plain-language answers on civic topics.</p>
+          </Link>
+          <Link to="/economy" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="size-4 text-[color:var(--ke-green)]" />
+              <p className="text-[12px] font-semibold">Budget insight</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Follow the numbers behind taxes and spending.</p>
+          </Link>
+          <Link to="/services" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <FileText className="size-4 text-[color:var(--ke-red)]" />
+              <p className="text-[12px] font-semibold">Public services</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Find hospitals, courts and Huduma centres nearby.</p>
+          </Link>
+          <Link to="/counties" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <Landmark className="size-4 text-[color:var(--ke-green)]" />
+              <p className="text-[12px] font-semibold">Counties</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">See county projects, budgets and local leaders.</p>
+          </Link>
+        </div>
+      </section>
       {userId && (
         <div className="mx-5 mb-4 space-y-3">
           <div className="rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>

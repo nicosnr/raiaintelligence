@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bell, Search, ShieldCheck, ArrowUpRight, ArrowRight,
   Newspaper, Play, BookOpen, TrendingUp, CalendarDays,
-  MapPin, MessagesSquare, Scale, Building2, Flame,
+  MapPin, MessagesSquare, Scale, Building2, Flame, Compass, FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { topics } from "@/lib/civic-content";
@@ -36,6 +36,15 @@ const SERVICES = [
   { to: "/assistant", label: "Ask AI", icon: MessagesSquare },
   { to: "/agents/justice", label: "Justice", icon: Scale },
   { to: "/agents/civicgov", label: "CivicGov", icon: Building2 },
+] as const;
+
+const CIVIC_TOOLS = [
+  { to: "/assistant", label: "Ask AI", description: "Natural-language questions about laws, services and procedures.", icon: MessagesSquare, accent: "linear-gradient(135deg,#990000 0%,#000 100%)" },
+  { to: "/economy", label: "Budget intelligence", description: "Track the budget, prices and public-finance updates.", icon: TrendingUp, accent: "linear-gradient(135deg,#0f2d4d 0%,#257a4a 100%)" },
+  { to: "/services", label: "Service finder", description: "Find Huduma centres, courts, hospitals and county offices.", icon: Compass, accent: "linear-gradient(135deg,#8a4b00 0%,#4d2a10 100%)" },
+  { to: "/learn", label: "Rights & laws", description: "Plain-language explainers for the Constitution and legal basics.", icon: Scale, accent: "linear-gradient(135deg,#16351c 0%,#0f5d4a 100%)" },
+  { to: "/counties", label: "County intelligence", description: "Explore county profiles, leaders and development projects.", icon: Building2, accent: "linear-gradient(135deg,#341010 0%,#183c6b 100%)" },
+  { to: "/calendar", label: "Public participation", description: "See hearings, programmes and deadlines that matter.", icon: FileText, accent: "linear-gradient(135deg,#2d1b00 0%,#7b4b11 100%)" },
 ] as const;
 
 const EVENTS = [
@@ -179,6 +188,33 @@ function Index() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Civic intelligence tools */}
+      <section className="mt-6 px-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] font-semibold">Civic intelligence tools</h2>
+          <Link to="/assistant" className="text-xs font-medium text-accent">Try them</Link>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          {CIVIC_TOOLS.map(({ to, label, description, icon: Icon, accent }) => (
+            <Link
+              key={to}
+              to={to}
+              className="rounded-2xl border border-border bg-card p-3"
+              style={{ boxShadow: "var(--shadow-card)" }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="flex size-9 items-center justify-center rounded-xl text-white" style={{ background: accent }}>
+                  <Icon className="size-4" />
+                </span>
+                <ArrowUpRight className="size-4 text-muted-foreground" />
+              </div>
+              <p className="mt-3 text-[13px] font-semibold">{label}</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">{description}</p>
+            </Link>
+          ))}
         </div>
       </section>
 
