@@ -14,40 +14,40 @@ export type FxRow = { code: string; name: string; flag: string; rate: number; tr
 
 // Indicative KES quotes (KES per 1 unit of foreign currency).
 export const FX_RATES: FxRow[] = [
-  { code: "USD", name: "US Dollar", flag: "🇺🇸", rate: 129.5, trend: -0.2 },
-  { code: "EUR", name: "Euro", flag: "🇪🇺", rate: 141.8, trend: +0.4 },
-  { code: "GBP", name: "British Pound", flag: "🇬🇧", rate: 164.2, trend: +0.1 },
-  { code: "UGX", name: "Ugandan Shilling (per 100)", flag: "🇺🇬", rate: 3.58, trend: 0 },
-  { code: "TZS", name: "Tanzanian Shilling (per 100)", flag: "🇹🇿", rate: 4.95, trend: -0.1 },
-  { code: "ZAR", name: "South African Rand", flag: "🇿🇦", rate: 6.93, trend: +0.3 },
-  { code: "AED", name: "UAE Dirham", flag: "🇦🇪", rate: 35.2, trend: -0.1 },
+  { code: "USD", name: "US Dollar", flag: "🇺🇸", rate: 129.2, trend: -0.3 },
+  { code: "EUR", name: "Euro", flag: "🇪🇺", rate: 141.1, trend: +0.4 },
+  { code: "GBP", name: "British Pound", flag: "🇬🇧", rate: 163.8, trend: +0.2 },
+  { code: "UGX", name: "Ugandan Shilling (per 100)", flag: "🇺🇬", rate: 3.57, trend: 0 },
+  { code: "TZS", name: "Tanzanian Shilling (per 100)", flag: "🇹🇿", rate: 4.90, trend: -0.1 },
+  { code: "ZAR", name: "South African Rand", flag: "🇿🇦", rate: 6.84, trend: +0.3 },
+  { code: "AED", name: "UAE Dirham", flag: "🇦🇪", rate: 35.0, trend: -0.1 },
 ];
 
 export type CommodityRow = { name: string; unit: string; price: number; trend: number; note: string };
 
 export const COMMODITIES: CommodityRow[] = [
-  { name: "Maize (90 kg bag)", unit: "KES", price: 4300, trend: -1.1, note: "Wholesale, Eldoret indicative" },
-  { name: "Wheat (90 kg bag)", unit: "KES", price: 5150, trend: +0.3, note: "Wholesale, Mombasa indicative" },
-  { name: "Beans (90 kg bag)", unit: "KES", price: 9400, trend: +0.7, note: "Wholesale, mixed grade" },
-  { name: "Rice (50 kg, Pishori)", unit: "KES", price: 9800, trend: +0.1, note: "Wholesale, Mwea" },
-  { name: "Milk (per litre, farmgate)", unit: "KES", price: 52, trend: +0.4, note: "Indicative average" },
+  { name: "Maize (90 kg bag)", unit: "KES", price: 4380, trend: -0.8, note: "Wholesale, Eldoret indicative" },
+  { name: "Wheat (90 kg bag)", unit: "KES", price: 5220, trend: +0.4, note: "Wholesale, Mombasa indicative" },
+  { name: "Beans (90 kg bag)", unit: "KES", price: 9550, trend: +0.6, note: "Wholesale, mixed grade" },
+  { name: "Rice (50 kg, Pishori)", unit: "KES", price: 9950, trend: +0.2, note: "Wholesale, Mwea" },
+  { name: "Milk (per litre, farmgate)", unit: "KES", price: 54, trend: +0.5, note: "Indicative average" },
 ];
 
 export type FuelRow = { product: string; nairobi: number; mombasa: number; kisumu: number };
 
 export const FUEL_PRICES: FuelRow[] = [
-  { product: "Super Petrol", nairobi: 188.8, mombasa: 186.2, kisumu: 192.1 },
-  { product: "Diesel", nairobi: 171.2, mombasa: 168.0, kisumu: 174.7 },
-  { product: "Kerosene", nairobi: 155.1, mombasa: 152.4, kisumu: 158.6 },
+  { product: "Super Petrol", nairobi: 189.4, mombasa: 186.7, kisumu: 192.8 },
+  { product: "Diesel", nairobi: 171.8, mombasa: 168.6, kisumu: 175.2 },
+  { product: "Kerosene", nairobi: 155.9, mombasa: 153.1, kisumu: 159.3 },
 ];
 
 export type MacroRow = { label: string; value: string; trend: number; note: string };
 
 export const MACRO_INDICATORS: MacroRow[] = [
-  { label: "Headline inflation (YoY)", value: "4.5%", trend: -0.2, note: "KNBS — latest public release" },
-  { label: "CBR (Central Bank Rate)", value: "10.75%", trend: -0.25, note: "CBK — policy signal" },
-  { label: "Interbank rate", value: "11.20%", trend: +0.1, note: "CBK — liquidity indicator" },
-  { label: "Govt 91-day T-bill", value: "10.90%", trend: -0.05, note: "CBK weekly auction" },
+  { label: "Headline inflation (YoY)", value: "4.3%", trend: -0.2, note: "KNBS — latest public release" },
+  { label: "CBR (Central Bank Rate)", value: "10.50%", trend: -0.25, note: "CBK — policy signal" },
+  { label: "Interbank rate", value: "11.00%", trend: +0.1, note: "CBK — liquidity indicator" },
+  { label: "Govt 91-day T-bill", value: "10.75%", trend: -0.05, note: "CBK weekly auction" },
 ];
 
 // ───────────────────────────── News Hub ─────────────────────────────

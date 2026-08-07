@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { STORIES } from "@/lib/stories";
 import type { Category } from "@/lib/feed-content";
@@ -7,47 +8,46 @@ export function StoriesRail({ onSelect }: { onSelect?: (category: Category | "Al
   const [viewed, setViewed] = useState<Record<string, boolean>>({});
 
   return (
-    <div className="px-3 pt-2 pb-3">
+    <div className="px-3 pb-3 pt-2">
       <div className="flex items-center justify-between px-1 pb-2">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-white/70">Stories</p>
         <span className="text-[11px] text-white/50">Government & officials</span>
       </div>
       <div className="flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {STORIES.map((s, i) => (
-          <button
+          <Link
             key={s.id}
-            type="button"
+            to={s.ctaTo ?? "/learn"}
             aria-label={`${s.name} — ${s.role}`}
             onClick={() => {
               setViewed((v) => ({ ...v, [s.id]: true }));
               onSelect?.(s.category);
             }}
-            className="tap shrink-0 flex flex-col items-center gap-1.5 w-[64px]"
+            className="tap shrink-0 w-[172px] rounded-[20px] border border-white/10 bg-white/5 p-2 text-left"
           >
-            <span className="relative block">
-              <span
-                className={
-                  "block rounded-full p-[2px] " +
-                  (s.unread && !viewed[s.id]
-                    ? "bg-[conic-gradient(from_140deg,#990000,#006600,#000,#990000)]"
-                    : "bg-white/15")
-                }
-              >
-                <span
-                  className="flex size-[58px] items-center justify-center rounded-full ring-2 ring-black text-[11px] font-bold text-white"
-                  style={{ background: s.gradient }}
-                >
+            <div className="relative mb-2 overflow-hidden rounded-[16px]">
+              {s.image ? (
+                <img src={s.image} alt={s.name} className="aspect-[4/5] w-full object-cover" />
+              ) : (
+                <div className="flex aspect-[4/5] items-center justify-center text-[11px] font-bold text-white" style={{ background: s.gradient }}>
                   {i === 0 ? <Plus className="size-5" /> : s.name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
-                </span>
+                </div>
+              )}
+              <span className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+                {s.role}
               </span>
-              {i === 0 && (
-                <span className="absolute -bottom-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-white text-black">
-                  <Plus className="size-3" />
+              {s.unread && !viewed[s.id] && (
+                <span className="absolute bottom-2 right-2 rounded-full border border-white/20 bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-black">
+                  New
                 </span>
               )}
-            </span>
-            <span className="line-clamp-1 text-[10px] font-medium text-white/85">{s.name}</span>
-          </button>
+            </div>
+            <div className="space-y-1">
+              <p className="line-clamp-1 text-[12px] font-semibold text-white">{s.name}</p>
+              <p className="line-clamp-2 text-[10px] text-white/65">{s.summary}</p>
+              <p className="line-clamp-2 text-[10px] font-medium text-[color:var(--ke-green)]">What they should do: {s.whatTheyShouldDo}</p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

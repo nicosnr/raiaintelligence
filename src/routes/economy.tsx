@@ -84,6 +84,20 @@ function EconomyPage() {
         </div>
       </section>
 
+      <section className="mx-4 mt-4 rounded-2xl border border-border bg-card p-3" style={{ boxShadow: "var(--shadow-card)" }}>
+        <div className="flex items-center gap-2">
+          <Sparkles className="size-4 text-[color:var(--ke-green)]" />
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Updated this week</p>
+        </div>
+        <p className="mt-2 text-sm font-semibold">Kenya’s economic pulse is still shaped by fuel costs, food prices, and public spending decisions.</p>
+        <p className="mt-1 text-[12px] text-muted-foreground">Use the links below to follow the story from the budget cycle to county allocations.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link to="/learn" className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold text-foreground">Budget basics</Link>
+          <Link to="/counties" className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold text-foreground">County allocations</Link>
+          <Link to="/representatives" className="rounded-full bg-secondary px-3 py-1.5 text-[11px] font-semibold text-foreground">Who decides?</Link>
+        </div>
+      </section>
+
       {/* Invite / converter strip */}
       <section className="mx-4 mt-4 grid grid-cols-2 gap-3">
         <div

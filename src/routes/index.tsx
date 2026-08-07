@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Bell, Search, ShieldCheck, ArrowUpRight, ArrowRight,
   Newspaper, Play, BookOpen, TrendingUp, CalendarDays,
-  MapPin, MessagesSquare, Scale, Building2,
+  MapPin, MessagesSquare, Scale, Building2, Flame,
 } from "lucide-react";
 import { useState } from "react";
 import { topics } from "@/lib/civic-content";
@@ -50,7 +50,7 @@ function Index() {
   const featured = topics[0];
   const rest = topics.slice(1, 4);
   const featuredImage = getTopicImage(featured.slug);
-  const { userId, displayName, total, completedCount, percent } = useLearningProgress();
+  const { userId, displayName, total, completedCount, percent, streak, bestStreak } = useLearningProgress();
   const remaining = total - completedCount;
   const explainerMessage =
     total === 0
@@ -125,6 +125,21 @@ function Index() {
             <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
               <div className="h-full rounded-full bg-white/85" style={{ width: `${percent}%` }} />
             </div>
+          </div>
+
+          <div className="relative mt-3 flex items-center justify-between gap-2 rounded-2xl bg-black/20 px-3 py-2.5 backdrop-blur ring-1 ring-white/10">
+            <div className="flex items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-full bg-amber-400/20 text-amber-300">
+                <Flame className="size-4" />
+              </span>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-white/75">Daily streak</p>
+                <p className="text-sm font-semibold">{streak} day{streak === 1 ? "" : "s"} · best {bestStreak}</p>
+              </div>
+            </div>
+            <Link to="/learn" className="rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white">
+              Keep it alive
+            </Link>
           </div>
 
           <div className="relative mt-4 flex items-center justify-between">
