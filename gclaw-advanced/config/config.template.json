@@ -1,0 +1,167 @@
+{
+  "_comment": "Gclaw Advanced config. Overrides ~/.gclaw/config.json. Every knob is annotated. Nothing here is set to a suicidal default.",
+
+  "stage": {
+    "initial": "seed",
+    "auto_promote": true,
+    "demote_on_breaker_trip_across_stage": true
+  },
+
+  "risk": {
+    "kelly_fraction_by_stage": {
+      "seed": 0.10,
+      "prove": 0.15,
+      "grow": 0.20,
+      "scale": 0.25,
+      "compound": 0.30
+    },
+    "max_leverage_by_stage": {
+      "seed": 3,
+      "prove": 5,
+      "grow": 8,
+      "scale": 12,
+      "compound": 15
+    },
+    "max_leverage_hard_ceiling": 20,
+    "max_leverage_hard_ceiling_requires_sortino_30d": 3.0,
+
+    "vol_target_daily": 0.02,
+    "stop_loss_vol_multiplier": 1.5,
+    "stop_loss_floor": 0.03,
+    "take_profit_r_multiple_default": 2.5,
+    "trailing_stop_after_r": 1.0,
+
+    "portfolio_max_gross": 3.0,
+    "cluster_caps": {
+      "btc_beta": 0.60,
+      "eth_beta": 0.50,
+      "sol_beta": 0.40,
+      "alt_large": 0.35,
+      "alt_small": 0.15,
+      "memes": 0.05
+    },
+    "cvar_5_max_fraction_of_equity": 0.15,
+
+    "circuit_breakers": {
+      "daily_drawdown": { "trip_at": 0.12, "cooldown_hours": 12 },
+      "loss_streak":    { "trip_at_n": 5, "halve_kelly_for_next_trades": 20 },
+      "gmac_burn_24h":  { "trip_at_fraction": 0.30, "downshift_llm_tier": true },
+      "data_liveness":  { "trip_below_uptime_5m": 0.90 },
+      "funding_shock":  { "trip_at_zscore": 4.0, "cooldown_hours": 4 },
+      "manual_kill_file": "/tmp/gclaw.halt",
+      "liquidation_proximity_fraction": 0.20
+    },
+
+    "house_money_rule": {
+      "enabled": true,
+      "sweep_ratio_of_new_high": 0.5,
+      "activate_at_multiple_of_principal": 3.0,
+      "cold_wallet_env": "GCLAW_COLD_WALLET"
+    }
+  },
+
+  "regime": {
+    "bar_seconds": 300,
+    "vetos": {
+      "chop":       { "max_leverage": 1, "kelly_scale": 0.2 },
+      "vol_spike":  { "max_leverage": 2, "kelly_scale": 0.5 },
+      "dislocated": { "discretionary_disabled": true, "arb_only": true }
+    }
+  },
+
+  "signal_fusion": {
+    "sources": [
+      "copy_trading_filtered",
+      "orderbook_imbalance",
+      "funding_skew",
+      "onchain_flow",
+      "cross_venue_basis",
+      "sentiment_llm"
+    ],
+    "min_calibrated_probability": 0.56,
+    "min_expected_edge_bps_after_cost": 15,
+    "isotonic_recalibration_hours": 24
+  },
+
+  "copy_trading": {
+    "enabled": true,
+    "source": "hyperliquid_top_traders",
+    "filter": {
+      "min_track_days": 60,
+      "min_sortino_60d": 2.0,
+      "max_drawdown_60d": 0.25,
+      "min_trades_60d": 40,
+      "exclude_if_last_10_trades_lose_streak": 4
+    },
+    "size_scale_of_leader": 0.3,
+    "max_leaders_mirrored_concurrently": 3
+  },
+
+  "execution": {
+    "smart_routing": true,
+    "twap_threshold_book_fraction": 0.05,
+    "mev_protection": true,
+    "paper_shadow_every_live_order": true,
+    "max_slippage_bps": 25,
+    "reject_if_expected_slippage_over_bps": 40
+  },
+
+  "metabolism": {
+    "heartbeat_seconds_by_stage": {
+      "seed": 900,
+      "prove": 600,
+      "grow": 300,
+      "scale": 180,
+      "compound": 180
+    },
+    "gmac_reserve_min": 100,
+    "auto_refuel_below_gmac": 200,
+    "auto_refuel_source": "usdc_profits_only"
+  },
+
+  "llm": {
+    "tiers": {
+      "sanity":    { "model": "ollama/llama3.1:8b", "always_on": true },
+      "routine":   { "model": "claude-haiku-4-5-20251001" },
+      "reasoning": { "model": "claude-sonnet-5" },
+      "post_mortem_weekly": { "model": "claude-opus-5" }
+    },
+    "escalate_to_reasoning_when": {
+      "regime_transition": true,
+      "position_notional_over_usd": 500,
+      "fusion_uncertainty_in_band": [0.45, 0.55]
+    },
+    "cost_budget_usd_per_day": 2.00,
+    "cache_prompts": true
+  },
+
+  "backtest": {
+    "walk_forward_required_before_promotion": true,
+    "min_days": 90,
+    "include_funding": true,
+    "include_gas": true,
+    "include_liquidation_math": true,
+    "fill_model": "top_of_book_depth"
+  },
+
+  "swarm": {
+    "spawn_thresholds_usd": [100, 500, 1000, 2500],
+    "consensus": "sortino_weighted_quorum",
+    "byzantine_tolerance_fraction": 0.33,
+    "parent_allocates_via": "thompson_sampling"
+  },
+
+  "dashboard": {
+    "bind": "127.0.0.1:18790",
+    "show_honest_countdown": true,
+    "alert_channels": ["desktop", "webhook"],
+    "alert_on": ["double_equity", "breaker_trip", "stage_promotion", "drift_over_threshold"]
+  },
+
+  "safety": {
+    "paper_only_first_hours": 24,
+    "require_manual_arm_before_live": true,
+    "kill_switch_file": "/tmp/gclaw.halt",
+    "dead_man_switch_ping_seconds": 90
+  }
+}
