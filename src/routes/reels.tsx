@@ -108,8 +108,12 @@ function ReelCard({ reel, index }: { reel: Reel; index: number }) {
 
   return (
     <section
-      className="relative flex h-[100dvh] w-full snap-start items-end justify-center animate-fade-up"
-      style={{ background: reel.poster, animationDelay: `${index * 60}ms` }}
+      className="relative flex h-[100dvh] w-full snap-start items-end justify-center animate-fade-up bg-cover bg-center"
+      style={{
+        backgroundImage: reel.poster,
+        backgroundColor: "#07111f",
+        animationDelay: `${index * 60}ms`,
+      }}
       aria-label={reel.title}
     >
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/85" />

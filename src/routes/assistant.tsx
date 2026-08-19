@@ -28,6 +28,9 @@ export const Route = createFileRoute("/assistant")({
         "What is judicial review?",
         "How does a bill become law?",
         "What is the difference between civil rights and civil liberties?",
+        "Summarise a budget or public-finance document in plain language",
+        "Explain the rights you have during a police stop or court case",
+        "Show me how to access county services and the documents I need",
       ]}
     />
   ),

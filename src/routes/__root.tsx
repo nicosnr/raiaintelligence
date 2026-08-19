@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import appCss from "../styles.css?url";
+import civicIntelLogo from "../assets/civicintel-logo.svg";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { LanguageProvider } from "../lib/i18n";
@@ -282,6 +283,12 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const router = useRouter();
   const [moreOpen, setMoreOpen] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsBooting(false), 900);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useEffect(() => { setMoreOpen(false); }, [pathname]);
 
@@ -297,6 +304,21 @@ function RootComponent() {
 
   const isImmersive = pathname === "/onboarding" || pathname === "/reels";
   const isAssistant = pathname === "/assistant" || pathname.startsWith("/agents/");
+
+  if (isBooting) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,_#07111f_0%,_#990000_45%,_#006600_100%)] px-6 text-center text-white">
+        <div className="w-full max-w-[320px] rounded-[28px] border border-white/15 bg-black/20 p-7 shadow-2xl backdrop-blur">
+          <img src={civicIntelLogo} alt="CivicIntel logo" className="mx-auto mb-4 h-24 w-24" />
+          <p className="text-2xl font-semibold tracking-tight">CivicIntel</p>
+          <p className="mt-2 text-sm text-white/70">Loading your civic guide…</p>
+          <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/15">
+            <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-[#f2b400] via-white to-[#7ce38b] animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

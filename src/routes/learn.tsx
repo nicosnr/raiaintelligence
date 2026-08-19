@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, ChevronRight } from "lucide-react";
+import { CheckCircle2, ChevronRight, Flame, Compass, FileText, Landmark, TrendingUp } from "lucide-react";
 import { topics } from "@/lib/civic-content";
 import { PageHeader } from "@/components/PageHeader";
 import { useLearningProgress } from "@/lib/useLearningProgress";
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/learn")({
 });
 
 function LearnIndex() {
-  const { userId, completedSlugs, total, completedCount, percent } = useLearningProgress();
+  const { userId, completedSlugs, total, completedCount, percent, streak, bestStreak } = useLearningProgress();
 
   return (
     <div>
@@ -27,14 +27,63 @@ function LearnIndex() {
         title="Learn"
         description="Short, neutral explainers on the foundations of civic life."
       />
+      <section className="mx-5 mb-4 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+        <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Quick civic tools</p>
+        <p className="mt-1 font-serif text-lg italic">Explore laws, services and budgets in one place.</p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <Link to="/assistant" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <Compass className="size-4 text-[color:var(--ke-red)]" />
+              <p className="text-[12px] font-semibold">Ask AI</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Get plain-language answers on civic topics.</p>
+          </Link>
+          <Link to="/economy" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="size-4 text-[color:var(--ke-green)]" />
+              <p className="text-[12px] font-semibold">Budget insight</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Follow the numbers behind taxes and spending.</p>
+          </Link>
+          <Link to="/services" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <FileText className="size-4 text-[color:var(--ke-red)]" />
+              <p className="text-[12px] font-semibold">Public services</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">Find hospitals, courts and Huduma centres nearby.</p>
+          </Link>
+          <Link to="/counties" className="rounded-xl border border-border bg-secondary p-3">
+            <div className="flex items-center gap-2">
+              <Landmark className="size-4 text-[color:var(--ke-green)]" />
+              <p className="text-[12px] font-semibold">Counties</p>
+            </div>
+            <p className="mt-1 text-[11px] text-muted-foreground">See county projects, budgets and local leaders.</p>
+          </Link>
+        </div>
+      </section>
       {userId && (
-        <div className="mx-5 mb-4 rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
-          <div className="flex items-end justify-between">
-            <p className="font-serif text-lg italic leading-none">{completedCount} of {total} learned</p>
-            <span className="text-[11px] text-muted-foreground">{percent}%</span>
+        <div className="mx-5 mb-4 space-y-3">
+          <div className="rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground">Daily streak</p>
+                <p className="mt-1 flex items-center gap-2 font-serif text-lg italic leading-none">
+                  <Flame className="size-4 text-amber-500" />
+                  {streak} day{streak === 1 ? "" : "s"}
+                </p>
+              </div>
+              <div className="rounded-full bg-secondary px-3 py-1 text-[11px] font-semibold text-muted-foreground">Best {bestStreak}</div>
+            </div>
+            <p className="mt-2 text-[12px] text-muted-foreground">Complete one explainer today to keep your streak alive.</p>
           </div>
-          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
-            <div className="h-full rounded-full" style={{ width: `${percent}%`, background: "var(--gradient-ke)" }} />
+          <div className="rounded-2xl border border-border bg-card p-4" style={{ boxShadow: "var(--shadow-card)" }}>
+            <div className="flex items-end justify-between">
+              <p className="font-serif text-lg italic leading-none">{completedCount} of {total} learned</p>
+              <span className="text-[11px] text-muted-foreground">{percent}%</span>
+            </div>
+            <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+              <div className="h-full rounded-full" style={{ width: `${percent}%`, background: "var(--gradient-ke)" }} />
+            </div>
           </div>
         </div>
       )}

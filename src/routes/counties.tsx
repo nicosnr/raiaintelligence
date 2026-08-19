@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { MapPin, Search } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { COUNTIES, REGIONS, type County } from "@/lib/counties";
+import { getCountyFinance, formatKES } from "@/lib/county-finance";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/counties")({
@@ -105,6 +106,10 @@ function CountiesPage() {
                 <li key={f} className="rounded-xl border border-border bg-card px-3 py-2 text-sm">{f}</li>
               ))}
             </ul>
+            <div className="mt-4">
+              <h3 className="text-sm font-semibold">County finances</h3>
+              <FinanceSummary code={active.code} />
+            </div>
             <p className="mt-4 text-[11px] text-muted-foreground">
               Devolved functions include health, agriculture, county roads, pre-primary education, and trade licensing (Constitution, Fourth Schedule).
             </p>
@@ -117,6 +122,35 @@ function CountiesPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function FinanceSummary({ code }: { code: number }) {
+  const f = getCountyFinance(code);
+  return (
+    <div className="mt-2 space-y-2">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>Allocation</span>
+        <span className="font-medium text-foreground">{formatKES(f.allocation)}</span>
+      </div>
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>Spent</span>
+        <span className="font-medium text-foreground">{formatKES(f.spent)}</span>
+      </div>
+      <div className="mt-2">
+        <div className="h-3 w-full overflow-hidden rounded-full border border-border bg-card">
+          <div
+            role="progressbar"
+            aria-valuenow={f.percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            className="h-3 bg-gradient-to-r from-green-500 to-emerald-500"
+            style={{ width: `${f.percent}%` }}
+          />
+        </div>
+        <div className="mt-1 text-[11px] text-muted-foreground">{f.percent}% of allocation spent</div>
+      </div>
     </div>
   );
 }

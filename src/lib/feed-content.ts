@@ -1,3 +1,9 @@
+import ballotBox from "@/assets/topics/ballot-box.jpg";
+import centralBank from "@/assets/topics/central-bank.jpg";
+import countyHall from "@/assets/topics/county-hall.jpg";
+import parliament from "@/assets/topics/parliament.jpg";
+import supremeCourt from "@/assets/topics/supreme-court.jpg";
+
 // Mock feed data for Reels and Posts. Neutral, educational, Kenya-focused.
 export type Category = "Rights" | "Government" | "Elections" | "Public Finance";
 
@@ -39,6 +45,9 @@ const GRADS = {
   earth: "linear-gradient(135deg,#1a1a1a 0%,#3a1f00 50%,#006600 100%)",
 };
 
+const withKenyaBackdrop = (image: string) =>
+  `linear-gradient(135deg, rgba(7,17,31,0.82) 0%, rgba(153,0,0,0.48) 55%, rgba(0,102,0,0.24) 100%), url(${image})`;
+
 export const REELS: Reel[] = [
   {
     id: "r1",
@@ -48,7 +57,7 @@ export const REELS: Reel[] = [
     author: "KNCHR Explainer",
     handle: "@knchr_civic",
     avatarGradient: GRADS.red,
-    poster: GRADS.red,
+    poster: withKenyaBackdrop(supremeCourt),
     postedAt: "2026-02-14T09:00:00Z",
     durationSec: 58,
     likes: 1243,
@@ -62,7 +71,7 @@ export const REELS: Reel[] = [
     author: "Parliament 101",
     handle: "@bunge_basics",
     avatarGradient: GRADS.green,
-    poster: GRADS.green,
+    poster: withKenyaBackdrop(parliament),
     postedAt: "2026-03-02T13:20:00Z",
     durationSec: 72,
     likes: 982,
@@ -76,7 +85,7 @@ export const REELS: Reel[] = [
     author: "CivicIntel",
     handle: "@civicintel",
     avatarGradient: GRADS.blackRed,
-    poster: GRADS.blackRed,
+    poster: withKenyaBackdrop(countyHall),
     postedAt: "2026-04-11T17:45:00Z",
     durationSec: 64,
     likes: 1567,
@@ -90,7 +99,7 @@ export const REELS: Reel[] = [
     author: "Treasury Watch",
     handle: "@treasury_watch",
     avatarGradient: GRADS.earth,
-    poster: GRADS.earth,
+    poster: withKenyaBackdrop(centralBank),
     postedAt: "2026-05-06T08:10:00Z",
     durationSec: 88,
     likes: 740,
@@ -104,7 +113,7 @@ export const REELS: Reel[] = [
     author: "IEBC Civic",
     handle: "@iebc_civic",
     avatarGradient: GRADS.red,
-    poster: GRADS.green,
+    poster: withKenyaBackdrop(ballotBox),
     postedAt: "2026-05-22T11:00:00Z",
     durationSec: 55,
     likes: 2103,

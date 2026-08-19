@@ -60,7 +60,15 @@ function NewsPage() {
 function NewsCard({ n }: { n: NewsItem }) {
   return (
     <article className="overflow-hidden rounded-3xl border border-border bg-card" style={{ boxShadow: "var(--shadow-card)" }}>
-      <div className="relative aspect-[16/9] w-full" style={{ background: n.cover }}>
+      <div
+        className="relative aspect-[16/9] w-full bg-cover bg-center"
+        style={{
+          backgroundImage: n.coverImage
+            ? `linear-gradient(135deg, rgba(7,17,31,0.75) 0%, rgba(153,0,0,0.45) 55%, rgba(0,102,0,0.28) 100%), url(${n.coverImage})`
+            : n.cover,
+          backgroundColor: "#07111f",
+        }}
+      >
         <span className="absolute left-3 top-3 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
           {n.category}
         </span>

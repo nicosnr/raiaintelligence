@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Landmark, ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
+import { getKenyaRepresentatives, type Representative } from "@/lib/representatives";
 
 export const Route = createFileRoute("/representatives")({
   head: () => ({
@@ -60,6 +61,49 @@ function RepsPage() {
         title="Find your representatives"
         description="We link to official government directories. CivicIntel does not host ratings or commentary about officials."
       />
+      <section className="px-5 mt-6">
+        <h3 className="text-sm font-semibold">Kenya — national & county representatives</h3>
+        <p className="mt-1 text-xs text-muted-foreground">Includes national officeholders and county-level roles (governor, senator). Local chiefs are listed as placeholders — use the source links to find current officeholders.</p>
+        <ul className="mt-3 space-y-2">
+          {getKenyaRepresentatives().slice(0, 1).map((r) => (
+            <li key={r.id}>
+              <a
+                href={r.source ?? "#"}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4 text-surface-foreground"
+              >
+                <Landmark className="mt-0.5 size-5 text-primary" aria-hidden="true" />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold">{r.name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{r.jurisdiction} — {r.role}</p>
+                </div>
+                <ExternalLink className="mt-0.5 size-4 text-muted-foreground" aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-4">
+          <h4 className="text-xs font-semibold">County list</h4>
+          <ul className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {getKenyaRepresentatives()
+              .filter((r) => r.role === "Governor" || r.role === "Senator")
+              .map((r) => (
+                <li key={r.id}>
+                  <a
+                    href={r.source ?? "#"}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex items-center justify-between rounded-lg border border-border bg-card px-3 py-2 text-sm"
+                  >
+                    <span className="truncate">{r.jurisdiction} — {r.role}</span>
+                    <ExternalLink className="size-4 text-muted-foreground" />
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </section>
       <div className="px-5">
         <label htmlFor="region" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Filter by country or body

@@ -17,4 +17,11 @@ export default defineConfig({
   nitro: {
     preset: "vercel"
   }
+  ,
+  ssr: {
+    external: [
+      '@tanstack/react-router',
+      '@tanstack/react-query'
+    ]
+  }
 });
